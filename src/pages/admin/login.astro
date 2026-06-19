@@ -17,9 +17,9 @@ import { supabase } from '../../db/supabase';
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand/10 blur-[150px] rounded-full -z-10 opacity-60"></div>
     
     <div class="w-full max-w-md">
-      <div class="bg-card/80 backdrop-blur-2xl border border-border p-8 md:p-10 rounded-3xl shadow-2xl relative">
+      <div class="bg-card border border-border p-8 md:p-10 rounded-xl relative">
         <!-- Decorative Corner -->
-        <div class="absolute -top-1 -right-1 w-12 h-12 border-t border-r border-brand/30 rounded-tr-3xl"></div>
+        <div class="absolute -top-1 -right-1 w-12 h-12 border-t border-r border-brand/30 rounded-tr-xl"></div>
         
         <div class="text-center mb-10">
           <img src="/images/logo-stacked-light.svg" alt="Mansha Enterprises" class="h-28 w-auto mx-auto mb-6 dark:hidden" />
@@ -37,7 +37,7 @@ import { supabase } from '../../db/supabase';
               name="email" 
               required 
               placeholder="admin@mansha-enterprises.com"
-              class="w-full h-12 bg-muted/50 border border-border rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all placeholder:text-muted-foreground/30 text-foreground"
+              class="w-full h-10 bg-muted/50 border border-border rounded-lg px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all placeholder:text-muted-foreground/30 text-foreground"
             />
           </div>
           
@@ -49,7 +49,7 @@ import { supabase } from '../../db/supabase';
               name="password" 
               required 
               placeholder="••••••••"
-              class="w-full h-12 bg-muted/50 border border-border rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all placeholder:text-muted-foreground/30 text-foreground"
+              class="w-full h-10 bg-muted/50 border border-border rounded-lg px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all placeholder:text-muted-foreground/30 text-foreground"
             />
           </div>
 
@@ -60,7 +60,7 @@ import { supabase } from '../../db/supabase';
           <button 
             type="submit" 
             id="submit-btn"
-            class="inline-flex items-center justify-center h-11 w-full rounded-lg bg-brand hover:bg-[#E8ED4F] text-[#0A0A0A] text-sm font-display font-semibold transition-all shadow-lg hover:shadow-brand/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[#0A0A0A] group cursor-pointer"
+            class="inline-flex items-center justify-center h-10 w-full rounded-lg bg-brand hover:bg-[#E8ED4F] text-[#0A0A0A] text-sm font-display font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[#0A0A0A] group cursor-pointer"
           >
             Sign In
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right ml-2 group-hover:translate-x-1 transition-transform"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>

@@ -33,7 +33,7 @@ This file serves as the primary instruction set for Gemini CLI in this workspace
 - **Database Migrations**: Initial schema and RLS policies documented in `supabase/migrations/` and `docs/DATABASE_SCHEMA.md`.
 
 ### 2. UI/UX & Navigation
-- **Mobile Drawer Overhaul**: Migrated from a bottom bar to a professional left-to-right slide-out sidebar for both frontend and admin.
+- **Mobile Drawer Overhaul**: Migrated from a bottom bar to a professional left-to-right slide-out sidebar for both frontend and admin, featuring complete active navigation state highlighting for all pages (services, buy-phones, accessories, about, faq).
 - **Admin Sidebar Alignment**: Standardized the admin panel sidebar to match the layout and tracking of the frontend sidebar (using uppercase wide tracking, flex chevrons, active state highlights, and unified layout bounds). Configured sidebar position to be fully `fixed` on desktop (offsetting content container via padding-left) to prevent it from scrolling away with page contents.
 - **Form Contrast & Image Overhaul**: Add/Edit Device forms (`phones/add.astro`, `phones/edit.astro`) overhauled using theme tokens, correcting text invisibility bugs in light mode, and completely removing the image upload fields.
 - **Compacted Datatables**: The phone inventory datatable (`phones/index.astro`) has been compacted (removed image previews, decreased vertical cell padding to `py-3.5`, and updated responsive widths).

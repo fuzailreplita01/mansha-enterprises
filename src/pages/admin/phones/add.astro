@@ -13,7 +13,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
       <p class="text-muted-foreground text-xs sm:text-sm font-medium">Create a new second-hand phone listing.</p>
     </header>
 
-    <div class="bg-card border border-border p-5 sm:p-8 md:p-10 rounded-[1.5rem] sm:rounded-[2rem] shadow-xl relative overflow-hidden">
+    <div class="bg-card border border-border p-5 sm:p-8 md:p-10 rounded-xl relative overflow-hidden">
       <!-- Decorator glow -->
       <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand/5 blur-[80px] rounded-full -z-0"></div>
 
@@ -27,7 +27,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
               name="model" 
               required 
               placeholder="e.g. iPhone 13 Pro"
-              class="w-full h-12 bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-2xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground"
+              class="w-full h-10 bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-lg px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground"
             />
           </div>
           
@@ -39,7 +39,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
               name="price" 
               required 
               placeholder="e.g. 45000"
-              class="w-full h-12 bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-2xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground"
+              class="w-full h-10 bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-lg px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground"
             />
           </div>
         </div>
@@ -51,7 +51,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
               id="condition" 
               name="condition" 
               required
-              class="w-full h-12 bg-card border border-border hover:border-brand/30 focus:border-brand rounded-2xl px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground appearance-none cursor-pointer"
+              class="w-full h-10 bg-card border border-border hover:border-brand/30 focus:border-brand rounded-lg px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground appearance-none cursor-pointer"
             >
               <option value="Like New">Like New</option>
               <option value="Excellent">Excellent</option>
@@ -71,26 +71,26 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
             name="description" 
             rows="4"
             placeholder="Describe the phone's storage, battery health, any scratches, etc."
-            class="w-full bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-2xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground resize-none"
+            class="w-full bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground resize-none"
           ></textarea>
         </div>
 
-        <div class="flex items-center gap-3 p-4 bg-muted/20 border border-border/80 rounded-2xl group hover:border-brand/20 transition-colors">
+        <div class="flex items-center gap-3 p-3 bg-muted/20 border border-border/80 rounded-lg group hover:border-brand/20 transition-colors">
           <input 
             type="checkbox" 
             id="sold" 
             name="sold" 
-            class="w-5 h-5 rounded-lg border-border text-brand bg-muted focus:ring-brand/20 transition-all cursor-pointer accent-brand" 
+            class="w-5 h-5 rounded border-border text-brand bg-muted focus:ring-brand/20 transition-all cursor-pointer accent-brand" 
           />
           <label for="sold" class="text-sm font-bold text-foreground cursor-pointer select-none">Mark as Sold</label>
         </div>
 
-        <div id="status-message" class="hidden text-xs p-4 rounded-2xl border text-center font-semibold transition-all animate-in fade-in"></div>
+        <div id="status-message" class="hidden text-xs p-4 rounded-lg border text-center font-semibold transition-all animate-in fade-in"></div>
 
         <button 
           type="submit" 
           id="submit-btn"
-          class="w-full inline-flex items-center justify-center h-12 px-6 rounded-lg bg-brand hover:bg-[#E8ED4F] text-[#0A0A0A] font-display font-semibold transition-all shadow-lg hover:shadow-brand/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[#0A0A0A] cursor-pointer"
+          class="w-full inline-flex items-center justify-center h-10 px-4 rounded-lg bg-brand hover:bg-[#E8ED4F] text-[#0A0A0A] font-display font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[#0A0A0A] cursor-pointer"
         >
           Create Listing
         </button>
@@ -112,7 +112,7 @@ import AdminLayout from '../../../layouts/AdminLayout.astro';
 
     if (statusMsg) {
       statusMsg.classList.add('hidden');
-      statusMsg.className = 'hidden text-xs p-4 rounded-2xl border text-center font-semibold transition-all animate-in fade-in';
+      statusMsg.className = 'hidden text-xs p-4 rounded-lg border text-center font-semibold transition-all animate-in fade-in';
     }
     
     if (submitBtn) {
