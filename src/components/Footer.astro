@@ -121,11 +121,103 @@ const cols = [
           <a href="mailto:mansha.enterprises.anagar@gmail.com" class="hover:text-[var(--foreground)] transition-colors">mansha.enterprises.anagar@gmail.com</a>
         </p>
       </div>
-
-      <!-- Copyright -->
-      <p class="text-xs text-[var(--muted-foreground)] shrink-0">
-        © {year} Mansha Enterprises. All rights reserved.
-      </p>
+ 
+      <!-- Copyright & Creator Badge -->
+      <div class="flex flex-col gap-2.5 items-start sm:items-end text-xs text-[var(--muted-foreground)] w-full sm:w-auto">
+        <p class="shrink-0">
+          © {year} Mansha Enterprises. All rights reserved.
+        </p>
+        
+        <a
+          href="https://www.linkedin.com/in/fuzail-ahmed-ansari/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-brand/15 bg-[#0A0A0A] hover:bg-[#121212] hover:border-brand/50 text-[11px] text-[var(--muted-foreground)] hover:text-white transition-all duration-200 group active:scale-[0.98] shadow-[0_0_10px_rgba(250,255,105,0.04)] hover:shadow-[0_0_18px_rgba(250,255,105,0.18)] select-none shrink-0"
+        >
+          <!-- Tiny WebGL 3D animate octahedron container -->
+          <div class="relative w-5 h-5 rounded bg-brand/5 border border-brand/10 overflow-hidden shrink-0 flex items-center justify-center">
+            <canvas id="dev-canvas" class="w-full h-full pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity"></canvas>
+          </div>
+          <span class="font-display font-medium tracking-wide">
+            Built by <span class="font-bold text-brand group-hover:text-white transition-colors">Fuzail Ahmed</span>
+          </span>
+        </a>
+      </div>
     </div>
   </div>
 </footer>
+
+<script>
+  import * as THREE from 'three';
+
+  function initDevCanvas() {
+    const canvas = document.getElementById('dev-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const width = 20;
+    const height = 20;
+
+    const scene = new THREE.Scene();
+    
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
+    camera.position.z = 2;
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      alpha: true,
+      antialias: true
+    });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const geometry = new THREE.OctahedronGeometry(0.85, 0);
+    
+    const material = new THREE.MeshBasicMaterial({
+      color: 0xfaff69,
+      wireframe: true,
+    });
+    
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    let frameId: number;
+    let rotationSpeed = 0.015;
+
+    const parentLink = canvas.closest('a');
+    if (parentLink) {
+      parentLink.addEventListener('mouseenter', () => {
+        rotationSpeed = 0.06;
+        material.color.setHex(0xffffff);
+      });
+      parentLink.addEventListener('mouseleave', () => {
+        rotationSpeed = 0.015;
+        material.color.setHex(0xfaff69);
+      });
+    }
+
+    const animate = () => {
+      mesh.rotation.x += rotationSpeed;
+      mesh.rotation.y += rotationSpeed;
+      renderer.render(scene, camera);
+      frameId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      renderer.dispose();
+      geometry.dispose();
+      material.dispose();
+    };
+  }
+
+  let cleanup: (() => void) | undefined;
+  
+  function setup() {
+    if (cleanup) cleanup();
+    cleanup = initDevCanvas();
+  }
+
+  setup();
+  document.addEventListener('astro:after-swap', setup);
+</script>
