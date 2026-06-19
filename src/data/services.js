@@ -17,8 +17,8 @@ export const services = [
     ),
     title: 'Apple & Android Mobiles',
     image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
-    shortDesc: 'We sell premium smartphones specializing in Apple iPhones, along with certified pre-owned devices.',
-    fullDesc: `Mansha Enterprises is your premier destination for premium smartphones and Apple products in Ahmednagar. We stock the latest models of Apple iPhones, Samsung Galaxy, OnePlus, Oppo, Vivo, and Realme. We also buy and sell certified pre-owned devices that undergo a rigorous 40-point quality check.`,
+    shortDesc: 'Authorized Oppo & Nothing partner outlet. We sell premium smartphones, specializing in Apple iPhones.',
+    fullDesc: `Mansha Enterprises is your premier destination for premium smartphones and Apple products in Ahmednagar. We are an authorized partner and dealer outlet for brand favorites like Oppo and Nothing, and also stock Apple iPhones, Samsung Galaxy, OnePlus, Vivo, and Realme. We also buy and sell certified pre-owned devices that undergo a rigorous 40-point quality check.`,
     whatsappMsg: 'Hi, I\'m interested in buying a phone (iPhone/Android). What models do you have in stock?',
   },
   {

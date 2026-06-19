@@ -14,7 +14,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import ServiceCard from '../components/ServiceCard.astro';
-import { SplineHero } from '../components/SplineHero.tsx';
+import SplineHero from '../components/SplineHero.astro';
 import { services } from '../data/services.js';
 ---
 
@@ -23,8 +23,8 @@ import { services } from '../data/services.js';
   description="Premium mobile phones, energy-efficient split & window ACs, RO water purifiers, and premium accessories at Mansha Enterprises in Alamgirnagar, Ahmednagar. Call +917262080880."
 >
 
-  <!-- 1. HERO — dark full-viewport, hydrates immediately -->
-  <SplineHero client:load />
+  <!-- 1. HERO — dark full-viewport, loads static layout instantly, WebGL is lazy-loaded -->
+  <SplineHero />
 
   <!-- 2. PRODUCTS & SERVICES OVERVIEW -->
   <section class="py-16 sm:py-20 bg-[var(--muted)]" aria-labelledby="services-heading">
@@ -165,7 +165,7 @@ import { services } from '../data/services.js';
         {[
           {
             title: 'Mobiles & Accessories',
-            body: 'New smartphones and certified pre-owned mobiles with written warranties. Genuine adapters, cables, and cases.',
+            body: 'Authorized Oppo & Nothing partner outlet. New smartphones and certified pre-owned mobiles with written warranties.',
             href: '/buy-phones',
           },
           {

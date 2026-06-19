@@ -148,66 +148,120 @@ const cols = [
 </footer>
 
 <script>
-  import * as THREE from 'three';
-
   function initDevCanvas() {
     const canvas = document.getElementById('dev-canvas') as HTMLCanvasElement | null;
     if (!canvas) return;
 
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
     const width = 28;
     const height = 28;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
 
-    const scene = new THREE.Scene();
-    
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 1.9;
+    // 3D vertices of an octahedron
+    const vertices = [
+      [0, 1, 0],   // Top
+      [0, -1, 0],  // Bottom
+      [1, 0, 0],   // Right
+      [-1, 0, 0],  // Left
+      [0, 0, 1],   // Front
+      [0, 0, -1]   // Back
+    ];
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvas,
-      alpha: true,
-      antialias: true
-    });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // 12 edges connecting the vertices
+    const edges = [
+      [0, 2], [0, 4], [0, 3], [0, 5], // Top pyramid
+      [1, 2], [1, 4], [1, 3], [1, 5], // Bottom pyramid
+      [2, 4], [4, 3], [3, 5], [5, 2]  // Middle ring
+    ];
 
-    const geometry = new THREE.OctahedronGeometry(0.9, 0);
-    
-    const material = new THREE.MeshBasicMaterial({
-      color: 0xfaff69,
-      wireframe: true,
-    });
-    
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-
-    let frameId: number;
+    let angleX = 0;
+    let angleY = 0;
     let rotationSpeed = 0.015;
+    let strokeColor = '#faff69';
 
     const parentLink = canvas.closest('a');
     if (parentLink) {
       parentLink.addEventListener('mouseenter', () => {
         rotationSpeed = 0.06;
-        material.color.setHex(0xffffff);
+        strokeColor = '#ffffff';
       });
       parentLink.addEventListener('mouseleave', () => {
         rotationSpeed = 0.015;
-        material.color.setHex(0xfaff69);
+        strokeColor = '#faff69';
       });
     }
 
-    const animate = () => {
-      mesh.rotation.x += rotationSpeed;
-      mesh.rotation.y += rotationSpeed;
-      renderer.render(scene, camera);
+    let frameId: number;
+
+    function animate() {
+      if (!ctx || !canvas) return;
+      ctx.clearRect(0, 0, width, height);
+
+      // Rotation angles
+      angleX += rotationSpeed;
+      angleY += rotationSpeed;
+
+      const cosX = Math.cos(angleX);
+      const sinX = Math.sin(angleX);
+      const cosY = Math.cos(angleY);
+      const sinY = Math.sin(angleY);
+
+      // Projected 2D points
+      const projected: [number, number][] = [];
+
+      for (let i = 0; i < vertices.length; i++) {
+        let [x, y, z] = vertices[i];
+
+        // Scale the octahedron
+        x *= 9.5;
+        y *= 9.5;
+        z *= 9.5;
+
+        // Rotate around X axis
+        let y1 = y * cosX - z * sinX;
+        let z1 = y * sinX + z * cosX;
+
+        // Rotate around Y axis
+        let x2 = x * cosY + z1 * sinY;
+        let z2 = -x * sinY + z1 * cosY;
+
+        // Perspective projection
+        const distance = 30;
+        const scale = distance / (distance + z2);
+        
+        const projX = width / 2 + x2 * scale;
+        const projY = height / 2 + y1 * scale;
+
+        projected.push([projX, projY]);
+      }
+
+      // Draw edges
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+
+      for (let i = 0; i < edges.length; i++) {
+        const [p1Idx, p2Idx] = edges[i];
+        const [x1, y1] = projected[p1Idx];
+        const [x2, y2] = projected[p2Idx];
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+      }
+
+      ctx.stroke();
+
       frameId = requestAnimationFrame(animate);
-    };
+    }
+
     animate();
 
     return () => {
       cancelAnimationFrame(frameId);
-      renderer.dispose();
-      geometry.dispose();
-      material.dispose();
     };
   }
 
