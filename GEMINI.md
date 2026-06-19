@@ -46,6 +46,10 @@ This file serves as the primary instruction set for Gemini CLI in this workspace
 - **Service & Phone Cards**: Premium hover effects, shadow-lifts, and theme-aware badges.
 - **Repair Form**: Refined validation and one-click WhatsApp follow-up integration.
 
+### 4. Competitor Intelligence & Service Alignment
+- **Competitor Audited**: Evaluated competitor website (`http://ahmednagarcity.in/raj%20enterprises.html` / Arihant Mobile Planet in Savedi, Ahmednagar) for service keyword coverage.
+- **Service & Form Enhancements**: Integrated competitor's core focus areas directly into Mansha Enterprises' catalog. Expanded `mobiles` to prioritize Apple & Android premium sales, `mobile-repair` to highlight Apple iPhone specialized servicing, and `led-tv-smart-home` to emphasize Sony LED TV repairs and office/residence smart automation setups. Added corresponding placeholder examples to the general booking `RepairForm.astro`.
+
 ---
 
 ## Coding Rules & Constraints

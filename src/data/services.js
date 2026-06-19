@@ -15,11 +15,11 @@ export const services = [
     icon: svgWrap(
       '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5"/>'
     ),
-    title: 'Mobiles (New & Used)',
+    title: 'Apple & Android Mobiles',
     image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
-    shortDesc: 'We sell smartphones of all major brands, plus quality tested second-hand mobile phones.',
-    fullDesc: `Mansha Enterprises is your one-stop shop for mobile phones. We stock the latest models from Samsung, Apple, OnePlus, Xiaomi, Oppo, Vivo, and Realme. We also buy and sell pre-owned smartphones that undergo a rigorous 40-point quality check, backed by an in-store warranty.`,
-    whatsappMsg: 'Hi, I\'m interested in buying a phone. What models do you have in stock?',
+    shortDesc: 'We sell premium smartphones specializing in Apple iPhones, along with certified pre-owned devices.',
+    fullDesc: `Mansha Enterprises is your premier destination for premium smartphones and Apple products in Ahmednagar. We stock the latest models of Apple iPhones, Samsung Galaxy, OnePlus, Oppo, Vivo, and Realme. We also buy and sell certified pre-owned devices that undergo a rigorous 40-point quality check.`,
+    whatsappMsg: 'Hi, I\'m interested in buying a phone (iPhone/Android). What models do you have in stock?',
   },
   {
     id: 'ac-sales',
@@ -63,11 +63,11 @@ export const services = [
     icon: svgWrap(
       '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>'
     ),
-    title: 'All-Brand Mobile Repair',
+    title: 'Apple & All-Brand Mobile Repair',
     image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800',
-    shortDesc: 'Screen replacements, battery swaps, charging port fixes, and liquid damage recovery.',
-    fullDesc: `Expert technicians ready to fix your mobile phone issues. We stock genuine OLED/LCD screens, high-capacity batteries, charging boards, and camera modules. We specialize in fast repairs with turnaround times under 2 hours for most common faults.`,
-    whatsappMsg: 'Hi, I need to get my mobile phone repaired. Can you give me an estimate?',
+    shortDesc: 'Specialized Apple iPhone & smartphone repair: screen replacement, battery swap, and board diagnostics.',
+    fullDesc: `Expert diagnostic and repair services for Apple products, iPhones, and Android smartphones. We stock OEM-grade parts, including premium OLED screens, high-capacity batteries, charging ports, and camera modules. Enjoy rapid turnarounds (typically under 2 hours).`,
+    whatsappMsg: 'Hi, I need to get my iPhone/smartphone repaired. Can you give me an estimate?',
   },
   {
     id: 'purifier-service',
@@ -80,5 +80,17 @@ export const services = [
     shortDesc: 'Periodic filter replacement, membrane health tests, TDS checks, and motor repairs.',
     fullDesc: `Clean drinking water requires timely filter replacements. We stock high-quality sediment filters, carbon filters, RO membranes, booster pumps, and SMPS power supplies. We provide on-site service, TDS calibration, and sanitization.`,
     whatsappMsg: 'Hi, my water purifier needs filter replacement or service. When can a technician visit?',
+  },
+  {
+    id: 'led-tv-smart-home',
+    slug: '#led-tv-smart-home',
+    icon: svgWrap(
+      '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'
+    ),
+    title: 'Sony LED TV & Smart Automation',
+    image: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&q=80&w=800',
+    shortDesc: 'Sony, Samsung & LG LED TV display panel repairs, and smart residence & office automation.',
+    fullDesc: `Expert diagnostics and panel service for Sony LED TVs, LG, and Samsung smart televisions. We also design and deploy smart residence and office automation setups—integrating smart switches (for ACs), automated purifiers, lighting, and security.`,
+    whatsappMsg: 'Hi, I would like to enquire about Sony LED TV repair or office/residence automation setup.',
   },
 ];

@@ -56,6 +56,13 @@ const getFeatures = (id) => {
       { label: "Gas & Wet Service", icon: "IconShield" },
       { label: "Service Warranty", icon: "IconTag" }
     ];
+  } else if (id.includes('tv') || id.includes('smart') || id.includes('led')) {
+    return [
+      { label: "Sony/LG/Samsung Experts", icon: "IconWrench" },
+      { label: "Display & Panel Fixes", icon: "IconBolt" },
+      { label: "Smart Controls Setup", icon: "IconShield" },
+      { label: "Written TV Warranty", icon: "IconTag" }
+    ];
   } else {
     return [
       { label: "RO+UV+Copper Systems", icon: "IconWrench" },
