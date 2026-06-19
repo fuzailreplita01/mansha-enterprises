@@ -1,6 +1,5 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
   title: string;
@@ -133,8 +132,7 @@ const accountItems = [
 
       <!-- Sidebar Footer -->
       <div class="p-4 md:p-6 border-t border-border bg-muted/10 space-y-4 md:space-y-5 mt-auto shrink-0 pb-safe">
-        <div class="flex items-center justify-between">
-          <ThemeToggle />
+        <div class="flex items-center justify-end">
           <a href="/" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent text-[9px] font-black uppercase tracking-[0.1em] text-muted-foreground hover:text-brand border border-border hover:border-brand/20 transition-all">
             Live Site
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>

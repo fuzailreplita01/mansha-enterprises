@@ -1,6 +1,5 @@
 ---
 import WhatsAppButton from './WhatsAppButton.astro';
-import ThemeToggle from './ThemeToggle.astro';
 
 /* Primary nav items with high-fidelity icons */
 const navLinks = [
@@ -77,14 +76,11 @@ const navLinks = [
 
     <!-- —— Desktop right cluster —— -->
     <div class="hidden md:flex items-center gap-3">
-      <ThemeToggle />
-      <div class="w-px h-4 bg-border mx-1"></div>
       <WhatsAppButton size="sm" variant="outline" label="Enquire Now" />
     </div>
 
     <!-- —— Mobile: toggle + sidebar trigger —— -->
     <div class="flex md:hidden items-center gap-2">
-      <ThemeToggle />
       <button
         id="sidebar-open"
         class="w-10 h-10 flex items-center justify-center rounded-xl bg-accent text-foreground active:scale-90 transition-transform cursor-pointer shadow-sm"

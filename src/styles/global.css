@@ -3,45 +3,8 @@
 /* ─── Class-based dark mode ─── */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ─── Light theme ─── */
+/* ─── Global dark-only theme ─── */
 :root {
-  --card: #ffffff;
-  --ring: #d9a441;
-  --input: #d8d6cc;
-  --muted: #eae7dd;
-  --accent: #eae7dd;
-  --border: #e2e0d5;
-  --radius: 0.5rem;
-  --chart-1: #d9a441;
-  --chart-2: #faff69;
-  --chart-3: #eae7dd;
-  --chart-4: #ffffff;
-  --chart-5: #141414;
-  --popover: #ffffff;
-  --primary: #faff69;
-  --sidebar: #fbfbfb;
-  --secondary: #0a0a0a;
-  --background: #f4f3ee;
-  --foreground: #141414;
-  --destructive: #e54d2e;
-  --sidebar-ring: #b5b5b5;
-  --sidebar-accent: #f7f7f7;
-  --sidebar-border: #ebebeb;
-  --card-foreground: #141414;
-  --sidebar-primary: #343434;
-  --muted-foreground: #6e6e6e;
-  --accent-foreground: #141414;
-  --popover-foreground: #141414;
-  --primary-foreground: #0a0a0a;
-  --sidebar-foreground: #252525;
-  --secondary-foreground: #ffffff;
-  --destructive-foreground: #ffffff;
-  --sidebar-accent-foreground: #343434;
-  --sidebar-primary-foreground: #fbfbfb;
-}
-
-/* ─── Dark theme ─── */
-.dark {
   --card: #1a1a1a;
   --ring: #faff69;
   --input: #3a3a3a;
@@ -50,9 +13,9 @@
   --border: #2a2a2a;
   --radius: 0.5rem;
   --chart-1: #faff69;
-  --chart-2: #d9a441;
-  --chart-3: #2a2a2a;
-  --chart-4: #1a1a1a;
+  --chart-2: #2a2a2a;
+  --chart-3: #1a1a1a;
+  --chart-4: #121212;
   --chart-5: #ffffff;
   --popover: #1a1a1a;
   --primary: #faff69;
@@ -75,6 +38,18 @@
   --destructive-foreground: #ffffff;
   --sidebar-accent-foreground: #f4f4f5;
   --sidebar-primary-foreground: #ffffff;
+
+  /* ── Mansha Brand CSS Variables ── */
+  --brand: #faff69;          /* Brand Electric Yellow for highlights */
+  --brand-accent: #faff69;   /* Primary accent */
+  --brand-dark: #e6eb52;     /* Darker electric yellow for hover states */
+  --brand-soft: rgba(250, 255, 105, 0.05); /* Translucent electric yellow soft tint */
+  --sky-300: 203, 92%, 53%;   /* Cyan/blue gradient tint for WebGL art */
+}
+
+/* ─── Dark theme compatibility ─── */
+.dark {
+  /* Inherits dark variables from root */
 }
 
 /* ─── Tailwind token mapping ─── */
@@ -113,10 +88,10 @@
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
 
   /* ── Mansha brand tokens ── */
-  --color-brand:      #faff69;
-  --color-brand-accent: #d9a441;
-  --color-brand-dark: #e6eb52;
-  --color-brand-soft: #fcfdf2;
+  --color-brand:        var(--brand);
+  --color-brand-accent:  var(--brand-accent);
+  --color-brand-dark:    var(--brand-dark);
+  --color-brand-soft:    var(--brand-soft);
   --color-ink:        #0a0a0a;
   --color-ink-soft:   #1c1c1c;
   --color-wa:         #25d366;
@@ -136,7 +111,7 @@
 
 /* ─── Base ─── */
 ::selection {
-  background-color: #D4A017;
+  background-color: #FAFF69;
   color: #0A0A0A;
 }
 
@@ -197,4 +172,12 @@ body {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--color-brand);
+}
+
+/* ─── UI/UX Parity Accessibility Overrides ─── */
+.bg-brand.text-ink {
+  color: var(--secondary-foreground) !important;
+}
+.dark .bg-brand.text-ink {
+  color: var(--primary-foreground) !important;
 }
