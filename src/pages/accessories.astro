@@ -1,0 +1,101 @@
+---
+/**
+ * Accessories page — category cards with WhatsApp enquiry CTAs.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { accessories } from '../data/accessories.js';
+---
+
+<BaseLayout
+  title="Mobiles, AC & Purifier Accessories Ahmednagar"
+  description="Phone cases, chargers, AC stabilizers, universal remotes, RO filters, and membranes in Alamgirnagar, Ahmednagar. Spares at Mansha Enterprises. Call +917262080880."
+>
+
+  <!-- ── Page header ── -->
+  <PageHero
+    eyebrow="Spares & Accessories"
+    title="Genuine Accessories in <span class='bg-clip-text text-transparent bg-gradient-to-r from-brand via-brand-accent to-brand'>Ahmednagar.</span>"
+    subtitle="<strong>Power, protect, and service your devices & appliances</strong> with certified stabilizers, filters, and accessories. WhatsApp us to check availability — stock is regularly updated."
+  />
+
+  <!-- ── Category grid ── -->
+  <section class="bg-[var(--muted)] py-12 sm:py-16" aria-labelledby="accessories-heading">
+    <div class="container-page">
+      <h2 id="accessories-heading" class="sr-only">Accessory categories</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {accessories.map(cat => (
+          <article class="card-chrome p-6 flex flex-col gap-4 group hover:shadow-[var(--shadow-lift)] transition-all duration-200">
+            <!-- Icon + title -->
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-brand/10 text-primary flex items-center justify-center shrink-0 border border-brand/20 shadow-[0_0_15px_rgba(250,255,105,0.15)] group-hover:shadow-[0_0_25px_rgba(250,255,105,0.30)] transition-all">
+                <Fragment set:html={cat.icon} />
+              </div>
+              <h2 class="font-display font-semibold text-[var(--foreground)] tracking-tight leading-snug text-sm">{cat.title}</h2>
+            </div>
+
+            <!-- Description -->
+            <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">{cat.description}</p>
+
+            <!-- Item list -->
+            <ul class="space-y-1.5 flex-1" role="list">
+              {cat.items.map(item => (
+                <li class="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
+                  <span class="w-1 h-1 rounded-full bg-brand/40 shrink-0" aria-hidden="true"></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <!-- CTA -->
+            <div class="mt-auto pt-4 border-t border-[var(--border)]">
+              <WhatsAppButton
+                message={cat.whatsappMsg}
+                label="Ask Availability"
+                size="md"
+                variant="outline"
+                fullWidth
+              />
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Bottom CTA ── -->
+  <section class="py-16 sm:py-24 bg-[var(--background)] border-t border-[var(--border)] relative overflow-hidden" aria-labelledby="accessories-cta-heading">
+    <!-- Ambient gold glow -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
+      <div class="w-[800px] h-[400px] rounded-full opacity-10" style="background: radial-gradient(ellipse at center, rgba(250,255,105,0.5) 0%, transparent 65%);"></div>
+    </div>
+    
+    <div class="container-page text-center relative z-10">
+      <h2 id="accessories-cta-heading" class="font-display heading-tight text-2xl sm:text-4xl text-[var(--foreground)]">
+        Looking for a specific spare or accessory?
+      </h2>
+      <p class="mt-3 text-sm text-[var(--muted-foreground)] max-w-sm mx-auto">
+        If you don't see what you need, just ask — we source filters, adapters, and stabilizers for most configurations.
+      </p>
+      
+      <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-md mx-auto sm:max-w-none">
+        <WhatsAppButton
+          message="Hi, I am looking for a specific accessory/spare part at Mansha Enterprises. Details: "
+          label="WhatsApp Your Request"
+          size="md"
+          variant="outline"
+          class="w-full sm:w-auto h-12 sm:h-11"
+        />
+        <a
+          href="tel:+917262080880"
+          class="inline-flex items-center justify-center h-12 sm:h-11 px-8 rounded-full bg-[#0A0A0A] dark:bg-white text-white dark:text-[#0A0A0A] text-sm font-semibold transition-all shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[var(--background)] w-full sm:w-auto"
+        >
+          Call Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

@@ -1,0 +1,311 @@
+---
+/**
+ * Home page — the main landing page for Mansha Enterprises.
+ *
+ * Sections:
+ *   1. Hero (dark, full-viewport — SplineHero React component)
+ *   2. Products & Services overview grid
+ *   3. Why choose us
+ *   4. Local authority showcase (Alamgirnagar, Ahmednagar)
+ *   5. How it works (3 steps)
+ *   6. Trust strip (stats)
+ *   7. CTA banner
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import { SplineHero } from '../components/SplineHero.tsx';
+import { services } from '../data/services.js';
+---
+
+<BaseLayout
+  title="Mobiles, ACs & Water Purifiers in Ahmednagar"
+  description="Premium mobile phones, energy-efficient split & window ACs, RO water purifiers, and premium accessories at Mansha Enterprises in Alamgirnagar, Ahmednagar. Call +917262080880."
+>
+
+  <!-- 1. HERO — dark full-viewport, hydrates immediately -->
+  <SplineHero client:load />
+
+  <!-- 2. PRODUCTS & SERVICES OVERVIEW -->
+  <section class="py-16 sm:py-20 bg-[var(--muted)]" aria-labelledby="services-heading">
+    <div class="container-page">
+      <div class="text-center mb-10">
+        <p class="eyebrow">What we offer</p>
+        <h2 id="services-heading" class="font-display font-bold text-2xl sm:text-4xl text-[var(--foreground)] mt-2">
+          Products & Services.
+        </h2>
+        <p class="mt-3 text-[var(--muted-foreground)] max-w-md mx-auto text-sm">
+          We retail premium brands and provide professional home installation, maintenance, and expert repair services.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {services.map(s => (
+          <ServiceCard
+            icon={s.icon}
+            title={s.title}
+            description={s.shortDesc}
+            href={`/services${s.slug}`}
+            whatsappMsg={s.whatsappMsg}
+            cta="Enquire Now"
+          />
+        ))}
+      </div>
+
+      <div class="text-center mt-10">
+        <a
+          href="/services"
+          class="inline-flex items-center justify-center h-12 px-8 rounded-full bg-foreground text-background dark:bg-white dark:text-ink text-sm font-bold transition-all shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-background"
+        >
+          View all product details
+          <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. WHY CHOOSE US -->
+  <section class="py-16 sm:py-20 bg-[var(--background)]" aria-labelledby="why-heading">
+    <div class="container-page">
+      <div class="text-center mb-10">
+        <p class="eyebrow">Why Mansha</p>
+        <h2 id="why-heading" class="font-display font-bold text-2xl sm:text-4xl text-[var(--foreground)] mt-2">
+          Built on trust and excellence.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          {
+            iconPath: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>',
+            title: 'Reliable Warranty',
+            desc: 'Every purchase and service comes backed by a written guarantee. Enjoy peace of mind with dependable support.',
+          },
+          {
+            iconPath: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+            title: 'Same-Day Service',
+            desc: 'Get mobile repairs done in under 2 hours, and rapid home installation for ACs and purifiers.',
+          },
+          {
+            iconPath: '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>',
+            title: 'Genuine Spares',
+            desc: 'We stock only OEM-grade components, certified stabilizers, and verified filters for long lifespan.',
+          },
+          {
+            iconPath: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7" stroke-width="2.5"/>',
+            title: 'Transparent Pricing',
+            desc: 'No hidden charges or surprise diagnostics fees. You get a clear, itemized quote up front.',
+          },
+        ].map(({ iconPath, title, desc }) => (
+          <div class="card-chrome group p-6 space-y-4 hover:shadow-[var(--shadow-lift)] transition-all duration-200">
+            <div class="w-12 h-12 rounded-2xl bg-brand/10 flex items-center justify-center text-primary border border-brand/20 shadow-[0_0_15px_rgba(250,255,105,0.1)] group-hover:shadow-[0_0_25px_rgba(250,255,105,0.25)] transition-all">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" aria-hidden="true" set:html={iconPath} />
+            </div>
+            <h3 class="font-display font-semibold text-[var(--foreground)] tracking-tight">{title}</h3>
+            <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. LOCAL AUTHORITY SECTION -->
+  <section class="relative overflow-hidden py-20 sm:py-28 bg-sidebar border-y border-border transition-colors duration-300" aria-labelledby="seo-heading">
+    <!-- Ambient brand glow -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
+      <div class="w-[800px] h-[500px] rounded-full opacity-10 dark:opacity-20"
+        style="background: radial-gradient(ellipse at center, var(--color-brand) 0%, transparent 65%);">
+      </div>
+    </div>
+    <!-- Dot grid -->
+    <div class="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" aria-hidden="true"
+      style="background-image: radial-gradient(circle, var(--color-brand) 1px, transparent 1px); background-size: 32px 32px;">
+    </div>
+
+    <div class="container-page relative z-10">
+
+      <!-- Eyebrow -->
+      <p class="text-brand/60 text-[0.65rem] font-black tracking-[0.2em] uppercase mb-4">
+        Ahmednagar's trusted electronics hub
+      </p>
+
+      <!-- Big headline -->
+      <h2 id="seo-heading" class="font-display font-bold text-3xl sm:text-5xl lg:text-6xl text-foreground max-w-3xl leading-[1.05]">
+        The electronics shop<br class="hidden sm:block" />
+        <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(135deg, #faff69 0%, #d9a441 50%, #faff69 100%);">
+          Ahmednagar trusts.
+        </span>
+      </h2>
+
+      <!-- Sub-headline -->
+      <p class="mt-5 text-muted-foreground text-base sm:text-lg max-w-xl leading-relaxed font-medium">
+        Fast local deliveries, certified home setup, and reliable smartphone repairs. Your comfort and connectivity is our priority, right here in Alamgirnagar.
+      </p>
+
+      <!-- Stats row -->
+      <div class="mt-10 flex flex-wrap gap-6 sm:gap-10">
+        {[
+          { value: '1000+',  label: 'Happy customers' },
+          { value: '4.9★',  label: 'Google rating' },
+          { value: 'Same-Day', label: 'Delivery & setup' },
+          { value: '100%',  label: 'Warranty coverage' },
+        ].map(({ value, label }) => (
+          <div class="space-y-0.5">
+            <p class="font-display text-2xl sm:text-3xl font-black text-foreground tracking-tight">{value}</p>
+            <p class="text-[10px] text-muted-foreground font-black tracking-[0.1em] uppercase">{label}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Divider -->
+      <div class="mt-12 h-px bg-border"></div>
+
+      <!-- Feature grid — 3 col -->
+      <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border border-border rounded-3xl overflow-hidden shadow-xl">
+        {[
+          {
+            title: 'Mobiles & Accessories',
+            body: 'New smartphones and certified pre-owned mobiles with written warranties. Genuine adapters, cables, and cases.',
+            href: '/buy-phones',
+          },
+          {
+            title: 'Air Conditioners (AC)',
+            body: 'Split & window AC sales from Voltas, Daikin, LG & Lloyd. Professional home installation, gas refilling, and wet washing.',
+            href: '/services#ac-sales',
+          },
+          {
+            title: 'Water Purifiers',
+            body: 'Advanced RO+UV water purifiers from Kent & Aquaguard. Quick installation, TDS testing, and timely filters replacement.',
+            href: '/services#purifiers',
+          },
+        ].map(({ title, body, href }) => (
+          <a
+            href={href}
+            class="group relative flex flex-col gap-3 p-6 sm:p-8 bg-card hover:bg-accent transition-all duration-300"
+          >
+            <!-- Brand top border on hover -->
+            <div class="absolute inset-x-0 top-0 h-px bg-brand/0 group-hover:bg-brand/40 transition-colors duration-200"></div>
+
+            <h3 class="font-display text-sm font-black text-foreground tracking-tight group-hover:text-primary transition-colors uppercase">{title}</h3>
+            <p class="text-xs text-muted-foreground leading-relaxed flex-1 font-medium">{body}</p>
+            <span class="inline-flex items-center justify-center h-8 px-4 rounded-full bg-brand/[0.08] border border-brand/[0.18] text-[10px] font-black uppercase tracking-widest text-brand group-hover:bg-brand/[0.15] transition-colors self-start mt-2">
+              Learn more
+              <svg class="w-3.5 h-3.5 ml-1.5 translate-x-0 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <!-- Opening hours pill -->
+      <div class="mt-10 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/15 bg-brand/[0.04] text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#4ade80] shrink-0 animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]"></span>
+        Open Mon–Sat 9 AM–8 PM · Sun 10 AM–6 PM · Alamgirnagar, Ahmednagar
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. HOW IT WORKS -->
+  <section class="py-16 sm:py-20 bg-[var(--background)]" aria-labelledby="how-heading">
+    <div class="container-page">
+      <div class="text-center mb-10">
+        <p class="eyebrow">The process</p>
+        <h2 id="how-heading" class="font-display font-bold text-2xl sm:text-4xl text-[var(--foreground)] mt-2">
+          Simple sales & service.
+        </h2>
+        <p class="mt-3 text-[var(--muted-foreground)] text-sm max-w-sm mx-auto">Three straightforward steps to buy or service your electronics.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+        {[
+          {
+            step: '01',
+            title: 'Explore & Enquire',
+            desc: 'Browse our catalog or request a sales/service quote online. We will confirm your details on WhatsApp or via call.',
+          },
+          {
+            step: '02',
+            title: 'Get Honest Quotes',
+            desc: 'Get expert guidance on products, or a clear upfront estimate for repair, servicing, or installation.',
+          },
+          {
+            step: '03',
+            title: 'Rapid Delivery/Setup',
+            desc: 'Get prompt home delivery, professional mounting/piping, or same-day mobile diagnostics & repair.',
+          },
+        ].map(({ step, title, desc }) => (
+          <div class="relative card-chrome p-6 space-y-3">
+            <!-- Step number — large mono background numeral -->
+            <span class="font-display absolute top-4 right-4 text-5xl font-semibold text-[var(--muted)] select-none leading-none" aria-hidden="true">
+              {step}
+            </span>
+            <div class="relative">
+              <p class="text-xs font-medium text-primary uppercase tracking-widest">Step {step}</p>
+              <h3 class="font-display font-semibold text-[var(--foreground)] mt-1 tracking-tight">{title}</h3>
+              <p class="text-sm text-[var(--muted-foreground)] leading-relaxed mt-1.5">{desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-12">
+        <a
+          href="/book-repair"
+          class="inline-flex items-center justify-center h-12 px-8 rounded-full bg-foreground text-background dark:bg-white dark:text-ink text-sm font-bold transition-all shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-background"
+        >
+          Book a Service / Enquiry
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. TRUST STRIP — stats -->
+  <section class="py-12 bg-[var(--muted)] border-y border-[var(--border)]" aria-label="Our track record">
+    <div class="container-page">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-6 text-center">
+        {[
+          { stat: '1000+',  label: 'Happy clients' },
+          { stat: '4.9★',  label: 'Average rating' },
+          { stat: 'Same-Day', label: 'Turnaround service' },
+          { stat: '100%',  label: 'Satisfaction warranty' },
+        ].map(({ stat, label }) => (
+          <div class="space-y-1.5 flex flex-col items-center">
+            <p class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)]">{stat}</p>
+            <p class="text-xs sm:text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-wide">{label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. CTA BANNER -->
+  <section class="py-16 sm:py-24 bg-[var(--background)]" aria-labelledby="cta-heading">
+    <div class="container-page text-center">
+      <h2 id="cta-heading" class="font-display font-bold text-2xl sm:text-4xl text-[var(--foreground)]">
+        Looking for a product or booking a service?
+      </h2>
+      <p class="mt-3 text-[var(--muted-foreground)] text-sm max-w-sm mx-auto">
+        Call us, WhatsApp us, or visit our Alamgirnagar showroom. We will handle the rest.
+      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-md mx-auto sm:max-w-none">
+        <a
+          href="/book-repair"
+          class="inline-flex items-center justify-center h-12 sm:h-11 px-8 rounded-full bg-[#0A0A0A] dark:bg-white text-white dark:text-[#0A0A0A] text-sm font-semibold transition-all shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand w-full sm:w-auto"
+        >
+          Book Service Online
+        </a>
+        <WhatsAppButton
+          message="Hi, I'd like to enquire about your products and services."
+          label="WhatsApp Us"
+          size="md"
+          variant="outline"
+          class="w-full sm:w-auto h-12 sm:h-11"
+        />
+      </div>
+      <p class="mt-6 text-xs text-[var(--muted-foreground)]">
+        Prefer to call? <a href="tel:+917262080880" class="font-semibold text-[var(--foreground)] hover:text-brand transition-colors">+91 72620 80880</a>
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>

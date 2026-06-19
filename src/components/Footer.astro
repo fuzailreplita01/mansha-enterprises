@@ -1,0 +1,131 @@
+---
+/**
+ * Site footer — four-column layout on desktop, stacked on mobile.
+ * Mirrors Vercel's footer: canvas background, body-sm text, mono eyebrows.
+ */
+const year = new Date().getFullYear();
+
+const cols = [
+  {
+    heading: 'Products',
+    links: [
+      { label: 'Mobile Phones',      href: '/buy-phones' },
+      { label: 'Air Conditioners',   href: '/services#ac' },
+      { label: 'Water Purifiers',    href: '/services#purifiers' },
+      { label: 'Accessories',        href: '/accessories' },
+    ],
+  },
+  {
+    heading: 'Services',
+    links: [
+      { label: 'Mobile Repair',      href: '/services#mobile-repair' },
+      { label: 'AC Service & Install',href: '/services#ac-service' },
+      { label: 'Water Purifier Service', href: '/services#purifier-service' },
+      { label: 'Book a Service',     href: '/book-repair' },
+    ],
+  },
+  {
+    heading: 'Company',
+    links: [
+      { label: 'About Us',           href: '/about' },
+      { label: 'Contact Us',         href: '/contact' },
+      { label: 'Branding Kit',       href: '/branding' },
+      { label: 'Privacy Policy',     href: '/privacy-policy' },
+      { label: 'Terms & Conditions', href: '/terms' },
+    ],
+  },
+];
+---
+
+<footer class="bg-[var(--sidebar)] border-t border-[var(--sidebar-border)]" role="contentinfo">
+  <div class="container-page py-12 lg:py-16">
+
+    <!-- Top grid: brand + three nav columns -->
+    <div class="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+
+      <!-- Brand column -->
+      <div class="col-span-2 sm:col-span-2 lg:col-span-1 space-y-4">
+        <!-- Logo -->
+        <a href="/" class="inline-flex flex-col items-start gap-3 group active:scale-95 transition-transform" aria-label="Mansha Enterprises homepage">
+          <!-- Monogram Mark -->
+          <svg viewBox="0 0 200 200" class="w-14 h-14 shrink-0 filter drop-shadow-[0_4px_12px_rgba(250,255,105,0.15)] group-hover:drop-shadow-[0_4px_16px_rgba(250,255,105,0.35)] transition-all">
+            <polyline points="44,152 44,56 100,122 156,56 156,152" fill="none" stroke="var(--primary)" stroke-width="22" stroke-linecap="square" stroke-linejoin="miter"/>
+          </svg>
+          
+          <!-- Stacked text -->
+          <div class="flex flex-col items-start -space-y-0.5 select-none">
+            <span class="font-display font-black text-xl tracking-tight leading-none text-foreground uppercase">
+              MANSHA <span class="text-primary">ENTERPRISES</span>
+            </span>
+            <span class="font-display font-bold text-[9px] tracking-[0.2em] uppercase text-muted-foreground whitespace-nowrap leading-none pt-1">
+              Mobiles · AC · Water Purifiers
+            </span>
+          </div>
+        </a>
+
+        <!-- Tagline -->
+        <p class="text-sm text-[var(--muted-foreground)] leading-relaxed max-w-xs">
+          Premium mobiles of all kinds, air conditioners (AC), water purifiers, and accessories in Alamgirnagar, Ahmednagar.
+        </p>
+
+        <!-- Social links -->
+        <div class="flex items-center gap-3">
+          <!-- WhatsApp -->
+          <a
+            href={`https://wa.me/917262080880?text=${encodeURIComponent("Hi, I'd like to enquire about your products and services.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-8 h-8 rounded-full border border-[var(--border)] flex items-center justify-center text-[var(--muted-foreground)] hover:text-wa hover:border-wa transition-colors"
+            aria-label="Mansha Enterprises on WhatsApp"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.025.507 3.934 1.395 5.61L0 24l6.545-1.371A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.794 9.794 0 01-5.003-1.373l-.36-.213-3.882.814.822-3.787-.234-.389A9.786 9.786 0 012.182 12c0-5.414 4.404-9.818 9.818-9.818 5.414 0 9.818 4.404 9.818 9.818 0 5.414-4.404 9.818-9.818 9.818z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Nav columns -->
+      {cols.map(({ heading, links }) => (
+        <div class="space-y-3">
+          <!-- Column heading — mono eyebrow style -->
+          <p class="eyebrow">{heading}</p>
+          <ul class="space-y-2" role="list">
+            {links.map(({ label, href }) => (
+              <li>
+                <a href={href} class="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <!-- Divider -->
+    <div class="mt-10 border-t border-[var(--sidebar-border)] pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <!-- Address + hours -->
+      <div class="text-xs text-[var(--muted-foreground)] space-y-0.5">
+        <p class="flex items-center gap-1.5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Alamgirnagar, Ahmednagar
+        </p>
+        <p class="flex items-center gap-1.5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Mon – Sat: 9 AM – 8 PM &nbsp;|&nbsp; Sun: 10 AM – 6 PM
+        </p>
+        <p class="flex items-center gap-1.5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:mansha.enterprises.anagar@gmail.com" class="hover:text-[var(--foreground)] transition-colors">mansha.enterprises.anagar@gmail.com</a>
+        </p>
+      </div>
+
+      <!-- Copyright -->
+      <p class="text-xs text-[var(--muted-foreground)] shrink-0">
+        © {year} Mansha Enterprises. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

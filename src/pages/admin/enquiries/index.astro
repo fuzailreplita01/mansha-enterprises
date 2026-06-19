@@ -1,0 +1,330 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Enquiries">
+  <div class="space-y-8">
+    <!-- Header Section -->
+    <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center text-brand border border-brand/20 shadow-[0_0_15px_rgba(212,160,23,0.1)]">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h1 class="text-3xl font-bold tracking-tight">Customer Inbox</h1>
+        </div>
+        <p class="text-muted-foreground text-sm font-medium">Review customer enquiries and manage communication for sales and service bookings.</p>
+      </div>
+      
+      <div class="relative group">
+        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-brand transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input 
+          type="text" 
+          id="search-input"
+          placeholder="Search name or device..." 
+          class="h-12 pl-11 pr-4 rounded-2xl bg-card border border-border text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 w-full sm:w-72 transition-all shadow-sm group-hover:border-brand/30"
+        />
+      </div>
+    </header>
+
+    <!-- Table Container -->
+    <div class="bg-card border border-border rounded-[2rem] overflow-hidden shadow-xl flex flex-col min-h-[500px]">
+      <div class="overflow-x-auto flex-grow">
+        <table class="w-full text-left border-collapse min-w-[900px]">
+          <thead>
+            <tr class="bg-muted/30 border-b border-border">
+              <th class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Customer</th>
+              <th class="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Device & Issue</th>
+              <th class="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Contact Hub</th>
+              <th class="px-8 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-right">Preview</th>
+            </tr>
+          </thead>
+          <tbody id="enquiries-table-body" class="divide-y divide-border/50">
+            <!-- Table rows injected here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="px-8 py-6 border-t border-border bg-muted/10 flex flex-col sm:row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
+          <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+            Total <span id="total-count" class="text-foreground">...</span> enquiries received
+          </p>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <button id="prev-page" class="w-10 h-10 flex items-center justify-center rounded-xl border border-border hover:bg-accent hover:text-brand disabled:opacity-20 disabled:pointer-events-none transition-all">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <div id="page-numbers" class="flex items-center gap-1.5"></div>
+          <button id="next-page" class="w-10 h-10 flex items-center justify-center rounded-xl border border-border hover:bg-accent hover:text-brand disabled:opacity-20 disabled:pointer-events-none transition-all">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div id="enquiry-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+    <div class="absolute inset-0 bg-background/80 backdrop-blur-md" id="modal-overlay"></div>
+    <div class="bg-card border border-border w-full max-w-xl rounded-[2rem] shadow-2xl relative z-10 overflow-hidden transform transition-all animate-in fade-in zoom-in duration-300">
+      <!-- Glow effect -->
+      <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand/5 blur-[80px] rounded-full -z-0"></div>
+
+      <div class="p-5 sm:p-8 md:p-10 space-y-5 sm:space-y-6 relative z-10">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center text-brand border border-brand/20 shadow-md">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+              <h3 id="modal-name" class="text-xl font-black tracking-tight text-foreground">...</h3>
+              <p id="modal-date" class="text-[9px] font-bold text-brand uppercase tracking-[0.2em] mt-0.5">...</p>
+            </div>
+          </div>
+          <button id="close-modal" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-accent text-muted-foreground hover:text-foreground transition-all active:scale-95 cursor-pointer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 sm:gap-4 max-h-[280px] sm:max-h-[380px] overflow-y-auto pr-1.5 custom-scrollbar">
+          <div class="group/item">
+            <p class="text-[9px] font-black text-brand uppercase tracking-[0.2em] mb-1.5 px-1">Customer Phone</p>
+            <div class="p-4 rounded-xl bg-muted/20 border border-border hover:border-brand/20 transition-colors">
+              <p id="modal-phone" class="text-sm font-bold text-foreground">...</p>
+            </div>
+          </div>
+          <div class="group/item">
+            <p class="text-[9px] font-black text-brand uppercase tracking-[0.2em] mb-1.5 px-1">Affected Device</p>
+            <div class="p-4 rounded-xl bg-muted/20 border border-border hover:border-brand/20 transition-colors">
+              <p id="modal-device" class="text-sm font-bold text-foreground">...</p>
+            </div>
+          </div>
+          <div class="group/item">
+            <p class="text-[9px] font-black text-brand uppercase tracking-[0.2em] mb-1.5 px-1">Problem Statement</p>
+            <div class="p-5 rounded-xl bg-muted/30 border border-border hover:border-brand/20 transition-colors">
+              <p id="modal-problem" class="text-sm font-medium leading-relaxed text-muted-foreground whitespace-pre-wrap">...</p>
+            </div>
+          </div>
+          <div class="group/item">
+            <p class="text-[9px] font-black text-brand uppercase tracking-[0.2em] mb-1.5 px-1">Contact Preference</p>
+            <div class="p-4 rounded-xl bg-muted/20 border border-border hover:border-brand/20 transition-colors flex items-center justify-between">
+              <p id="modal-contact" class="text-sm font-bold text-foreground">...</p>
+              <div class="w-2 h-2 rounded-full bg-brand"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+          <a id="modal-whatsapp-link" href="#" target="_blank" class="flex-1 inline-flex items-center justify-center h-11 sm:h-12 rounded-2xl bg-wa hover:bg-wa-dark text-white text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:shadow-wa/10 active:scale-[0.98]">
+            <svg class="w-4.5 h-4.5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.353-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.13.57-.074 1.758-.717 2.006-1.412.248-.695.248-1.29.173-1.412-.074-.122-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-2.578l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.818 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Reply WhatsApp
+          </a>
+          <button id="modal-delete-btn" class="flex-1 inline-flex items-center justify-center h-11 sm:h-12 rounded-2xl border border-destructive/20 text-destructive text-xs font-bold uppercase tracking-widest transition-all hover:bg-destructive/5 hover:border-destructive/30 hover:scale-[1.01] active:scale-[0.99] cursor-pointer">
+            <svg class="w-4.5 h-4.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            Archive Enquiry
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../../db/supabase';
+
+  let currentEnquiries = [];
+  let currentPage = 1;
+  const pageSize = 10;
+  let searchQuery = '';
+  let totalEntries = 0;
+
+  const tbody = document.getElementById('enquiries-table-body');
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const prevBtn = document.getElementById('prev-page') as HTMLButtonElement;
+  const nextBtn = document.getElementById('next-page') as HTMLButtonElement;
+  const showingRange = document.getElementById('showing-range');
+  const totalCountEl = document.getElementById('total-count');
+  const pageNumbers = document.getElementById('page-numbers');
+
+  async function loadEnquiries() {
+    if (!supabase) return;
+
+    tbody!.innerHTML = `
+      <tr>
+        <td colspan="4" class="px-8 py-32 text-center">
+          <div class="flex flex-col items-center gap-4">
+            <div class="relative w-12 h-12">
+               <div class="absolute inset-0 rounded-full border-4 border-brand/10"></div>
+               <div class="absolute inset-0 rounded-full border-4 border-t-brand animate-spin"></div>
+            </div>
+            <p class="text-sm font-bold uppercase tracking-widest text-muted-foreground opacity-50">Opening Inbox...</p>
+          </div>
+        </td>
+      </tr>
+    `;
+
+    const from = (currentPage - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    let query = supabase.from('enquiries').select('*', { count: 'exact' });
+    if (searchQuery) query = query.or(`name.ilike.%${searchQuery}%,device.ilike.%${searchQuery}%`);
+
+    const { data: enquiries, count, error } = await query
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      tbody!.innerHTML = `<tr><td colspan="4" class="px-8 py-20 text-center text-destructive font-bold uppercase tracking-widest text-xs">Error: ${error.message}</td></tr>`;
+      return;
+    }
+
+    totalEntries = count || 0;
+    currentEnquiries = enquiries || [];
+    renderTable();
+    renderPagination();
+  }
+
+  function renderTable() {
+    if (currentEnquiries.length === 0) {
+      tbody!.innerHTML = `
+        <tr>
+          <td colspan="4" class="px-8 py-32 text-center">
+            <div class="flex flex-col items-center gap-4 opacity-40">
+              <svg class="w-16 h-16 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <p class="text-sm font-bold uppercase tracking-[0.2em]">No enquiries found in history</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      showingRange!.textContent = '0';
+      totalCountEl!.textContent = '0';
+      return;
+    }
+
+    tbody!.innerHTML = currentEnquiries.map((e) => `
+      <tr class="hover:bg-accent/30 transition-colors group cursor-pointer" onclick="window.showEnquiry('${e.id}')">
+        <td class="px-8 py-5">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center text-brand font-black text-xs group-hover:border-brand/30 transition-colors">
+              ${e.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p class="font-bold text-[var(--foreground)] group-hover:text-brand transition-colors">${e.name}</p>
+              <p class="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">${new Date(e.created_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</p>
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-5">
+          <p class="text-sm font-bold text-[var(--foreground)] tracking-tight">${e.device || 'General'}</p>
+          <p class="text-xs font-medium text-muted-foreground truncate max-w-[240px] opacity-70">${e.problem || 'Inquiry only'}</p>
+        </td>
+        <td class="px-6 py-5">
+          <p class="text-sm font-black text-foreground tracking-tight">${e.phone}</p>
+          <span class="inline-flex items-center text-[9px] font-black uppercase tracking-[0.2em] text-brand/80">${e.preferred_contact || 'Standard'}</span>
+        </td>
+        <td class="px-8 py-5 text-right">
+          <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-muted/50 text-muted-foreground group-hover:bg-brand/10 group-hover:text-brand group-hover:scale-110 transition-all border border-transparent group-hover:border-brand/20">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    const start = (currentPage - 1) * pageSize + 1;
+    const end = Math.min(currentPage * pageSize, totalEntries);
+    showingRange!.textContent = `${start}-${end}`;
+    totalCountEl!.textContent = totalEntries.toString();
+  }
+
+  function renderPagination() {
+    const totalPages = Math.ceil(totalEntries / pageSize);
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+    let pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        pages.push(i);
+      } else if (i === currentPage - 2 || i === currentPage + 2) {
+        if (pages[pages.length - 1] !== '...') pages.push('...');
+      }
+    }
+
+    pageNumbers!.innerHTML = pages.map(p => {
+      if (p === '...') return `<span class="px-2 text-muted-foreground opacity-30 font-black">...</span>`;
+      return `
+        <button data-page="${p}" class="page-num-btn w-10 h-10 rounded-xl text-xs font-black transition-all ${p === currentPage ? 'bg-brand text-ink shadow-lg shadow-brand/20 scale-105' : 'hover:bg-accent text-muted-foreground border border-border'}">${p}</button>
+      `;
+    }).join('');
+
+    document.querySelectorAll('.page-num-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        currentPage = parseInt((e.currentTarget as HTMLElement).dataset.page!);
+        loadEnquiries();
+      });
+    });
+  }
+
+  const modal = document.getElementById('enquiry-modal');
+  const overlay = document.getElementById('modal-overlay');
+  const closeBtn = document.getElementById('close-modal');
+
+  (window as any).showEnquiry = (id: string) => {
+    const e = currentEnquiries.find((item: any) => item.id === id);
+    if (!e) return;
+
+    document.getElementById('modal-name')!.textContent = e.name;
+    document.getElementById('modal-date')!.textContent = new Date(e.created_at).toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' });
+    document.getElementById('modal-phone')!.textContent = e.phone;
+    document.getElementById('modal-device')!.textContent = e.device || 'Not specified';
+    document.getElementById('modal-problem')!.textContent = e.problem || 'The customer has not provided a specific problem description.';
+    document.getElementById('modal-contact')!.textContent = e.preferred_contact || 'None specified';
+
+    const cleanPhone = e.phone.replace(/[^0-9]/g, '');
+    const waLink = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Hello ${e.name}, this is Mansha Enterprises regarding your enquiry for ${e.device}...`)}`;
+    (document.getElementById('modal-whatsapp-link') as HTMLAnchorElement).href = waLink;
+
+    (document.getElementById('modal-delete-btn') as HTMLButtonElement).onclick = async () => {
+      if (confirm('Archive this enquiry? This will remove it from the inbox.')) {
+        const { error } = await supabase!.from('enquiries').delete().eq('id', id);
+        if (error) alert(error.message);
+        else {
+          modal?.classList.add('hidden');
+          loadEnquiries();
+        }
+      }
+    };
+
+    modal?.classList.remove('hidden');
+  };
+
+  const closeModal = () => modal?.classList.add('hidden');
+  closeBtn?.addEventListener('click', closeModal);
+  overlay?.addEventListener('click', closeModal);
+
+  let searchTimeout: any;
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = (e.target as HTMLInputElement).value;
+      currentPage = 1;
+      loadEnquiries();
+    }, 400);
+  });
+
+  prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; loadEnquiries(); } });
+  nextBtn.addEventListener('click', () => { if (currentPage < Math.ceil(totalEntries / pageSize)) { currentPage++; loadEnquiries(); } });
+
+  loadEnquiries();
+</script>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--brand); }
+</style>

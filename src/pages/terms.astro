@@ -1,0 +1,122 @@
+---
+/**
+ * Terms & Conditions page — standard terms for the shop website and retail/repair services.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const lastUpdated = '19 June 2026';
+---
+
+<BaseLayout
+  title="Terms & Conditions"
+  description="Terms and Conditions for Mansha Enterprises — retail sales, AC/purifier servicing, mobile repairs, and website use."
+  noIndex
+>
+  <PageHero
+    eyebrow="Legal"
+    title="Terms & <span class='bg-clip-text text-transparent bg-gradient-to-r from-brand via-brand-accent to-brand'>Conditions.</span>"
+    subtitle={`<strong>Last updated:</strong> ${lastUpdated}. Please read carefully.`}
+  />
+
+  <section class="bg-[var(--background)] py-16 sm:py-24">
+    <div class="container-page">
+      <div class="max-w-3xl space-y-10 text-base text-[var(--muted-foreground)] leading-relaxed">
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">1. Agreement to terms</h2>
+          <p>
+            By using the website at mansha-enterprises.com or the services provided by Mansha Enterprises ("Mansha Enterprises",
+            "we", "us"), you agree to these Terms & Conditions. If you do not agree, please do
+            not use our website or services.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">2. Retail & Installation Services</h2>
+          <ul class="list-disc list-inside space-y-1.5 ml-2">
+            <li>All retail prices for products (mobiles, ACs, water purifiers) and service charges are quoted upfront before purchase or work commencement.</li>
+            <li>Home delivery and installation for Air Conditioners (AC) and Water Purifiers are scheduled upon authorization. Any additional electrical or structural work required is the responsibility of the buyer.</li>
+            <li>Quotes for repairs or servicing are estimates and may be revised if additional faults are found during servicing. We will obtain your consent before proceeding.</li>
+            <li>We are not responsible for data loss during mobile repairs. We recommend backing up your device prior to drop-off.</li>
+            <li>Devices left uncollected for more than 90 days after repair completion may be disposed of or sold to recover cost of spares and labor.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">3. Service Warranty</h2>
+          <p>
+            Repairs and installation services carried out by Mansha Enterprises are covered by a limited service warranty (typically 30–90 days, specified at time of service). This warranty does not cover:
+          </p>
+          <ul class="list-disc list-inside space-y-1 ml-2">
+            <li>New, unrelated faults arising after service.</li>
+            <li>Physical damage, water ingress, power surges, or tampering by third parties after installation or repair.</li>
+            <li>Normal wear and tear of consumables (such as filter cartridges or membranes).</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">4. Pre-owned Mobile Sales</h2>
+          <ul class="list-disc list-inside space-y-1.5 ml-2">
+            <li>All pre-owned mobile phones are sold in condition described honestly under our condition grading.</li>
+            <li>We provide a 7-day return window for pre-owned phones if a hidden hardware fault not disclosed at point of sale is found.</li>
+            <li>Cosmetic wear corresponding to the stated condition grade is not grounds for return.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">5. Spares & Accessories</h2>
+          <p>
+            Spares (stabilizers, RO filters, charging cables) are final sale unless found faulty on arrival. Any defects must be reported within 48 hours. Items showing signs of physical wear or misuse will not be eligible for replacement or return.
+          </p>
+        </div>
+
+        <div class="font-display space-y-3">
+          <h2 class="text-xl font-bold text-[var(--foreground)] tracking-tight">6. Payment</h2>
+          <p>
+            Payment is due upon purchase, delivery, or collection of the serviced product. We accept cash, major credit/debit cards, and UPI payments. Items will not be released until payment is completed in full.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">7. Limitation of liability</h2>
+          <p>
+            To the maximum extent permitted by law, Mansha Enterprises' total liability for any service claim is limited to the amount paid for that specific service. We are not liable for indirect, consequential, or special damages.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">8. Website use</h2>
+          <p>
+            The content on mansha-enterprises.com is provided for general information. We make no warranties regarding accuracy or completeness. We reserve the right to modify or discontinue services or Site content without notice.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">9. Intellectual property</h2>
+          <p>
+            All content on this Site, including text, images, and monogram design, is owned by Mansha Enterprises. You may not reproduce or use any content without prior written permission.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">10. Governing law</h2>
+          <p>
+            These Terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts in Ahmednagar.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-xl font-bold text-[var(--foreground)] tracking-tight">11. Contact</h2>
+          <address class="not-italic space-y-0.5 text-sm">
+            <p class="font-bold text-[var(--foreground)]">Mansha Enterprises</p>
+            <p>Alamgirnagar, Ahmednagar</p>
+            <p>📞 <a href="tel:+917262080880" class="text-primary hover:underline">+91 72620 80880</a></p>
+            <p>✉️ <a href="mailto:mansha.enterprises.anagar@gmail.com" class="text-primary hover:underline">mansha.enterprises.anagar@gmail.com</a></p>
+          </address>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</BaseLayout>

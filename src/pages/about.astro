@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+---
+
+<BaseLayout
+  title="About Us — Mobiles, ACs & Water Purifiers Ahmednagar"
+  description="Mansha Enterprises is a trusted shop in Alamgirnagar, Ahmednagar. High-quality mobile sales, AC installations, water purifier filter servicing, and genuine repairs. Call +917262080880."
+>
+  <PageHero
+    eyebrow="Our story"
+    title="Your Local Electronics Shop in <span class='bg-clip-text text-transparent bg-gradient-to-r from-brand via-brand-accent to-brand'>Ahmednagar.</span>"
+    subtitle="Built on dependability, service quality, and a <strong>passion for customer satisfaction.</strong>"
+  />
+
+  <!-- —— Story section —— -->
+  <section class="bg-[var(--background)] py-16 sm:py-24">
+    <div class="container-page">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+        <!-- Left: large pull quote -->
+        <div class="lg:sticky lg:top-24">
+          <p class="text-[0.65rem] font-semibold tracking-[0.14em] uppercase text-primary mb-4">Who we are</p>
+          <blockquote class="font-display heading-tight text-2xl sm:text-4xl text-[var(--foreground)] leading-[1.1]">
+            "We started with a vision to bring premium consumer appliances and support directly to Ahmednagar families."
+          </blockquote>
+          <div class="mt-8 flex flex-wrap gap-6">
+            {[
+              { value: '10+',   label: 'Years in business' },
+              { value: '1000+', label: 'Happy customers' },
+              { value: '4.9★', label: 'Customer rating' },
+            ].map(({ value, label }) => (
+              <div>
+                <p class="font-display text-2xl font-bold text-[var(--foreground)] tracking-tight">{value}</p>
+                <p class="text-xs text-[var(--muted-foreground)] mt-0.5 uppercase tracking-wide font-medium">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Right: story text -->
+        <div class="space-y-5 text-[var(--muted-foreground)] leading-relaxed">
+          <p class="text-base text-[var(--foreground)] font-medium">
+            Mansha Enterprises was founded on a simple principle: to offer premium electronics, air conditioning, and water purification systems with honest advice and professional support.
+          </p>
+          <p class="text-sm">
+            From our humble beginnings in Alamgirnagar, we have grown into one of Ahmednagar's most reliable destinations for mobile phones (new and pre-owned), high-efficiency split & window ACs, and advanced RO water purification setups.
+          </p>
+          <p class="text-sm">
+            We are not a distant corporate franchise. We are local. When you visit us, you speak directly with our core team. We ensure quick delivery, certified installations, and genuine mobile repairs.
+          </p>
+          <p class="text-sm">
+            Whether you need a new high-speed smartphone, a stabilizer to protect your air conditioner, a fresh filter membrane for pure drinking water, or a quick screen repair, our goal is to deliver top quality and a seamless service experience.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- —— Values — dark strip ── -->
+  <section class="bg-[#07060E] py-16 sm:py-20">
+    <div class="container-page">
+      <p class="text-[0.65rem] font-semibold tracking-[0.14em] uppercase text-brand/60 mb-3">How we work</p>
+      <h2 class="font-display heading-tight text-xl sm:text-3xl text-white mb-10 max-w-lg">
+        The values behind our business.
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-brand/10">
+        {[
+          {
+            paths: '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+            title: 'Honest advice',
+            desc: "We help you choose products that fit your home and budget, without pushy sales tactics.",
+          },
+          {
+            paths: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>',
+            title: 'Service Warranty',
+            desc: 'Every purchase and service comes backed by a written guarantee. We stand behind our work.',
+          },
+          {
+            paths: '<circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/>',
+            title: 'OEM components',
+            desc: 'We use genuine spare parts, authentic filters, and certified stabilizers to ensure reliability.',
+          },
+          {
+            paths: '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>',
+            title: 'Community first',
+            desc: 'We are based in Alamgirnagar. We offer fair prices, convenient financing, and active support for local families.',
+          },
+        ].map(({ paths, title, desc }) => (
+          <div class="bg-[#07060E] p-6 sm:p-8 space-y-3 group hover:bg-[#0d0c18] transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/15 flex items-center justify-center text-brand">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5" aria-hidden="true" set:html={paths}></svg>
+            </div>
+            <h3 class="font-display font-semibold text-white text-sm tracking-tight">{title}</h3>
+            <p class="text-xs text-white/40 leading-relaxed">{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- —— Promise section ── -->
+  <section class="bg-[var(--muted)] py-16 sm:py-20 border-t border-[var(--border)]">
+    <div class="container-page">
+      <div class="max-w-2xl">
+        <p class="text-[0.65rem] font-semibold tracking-[0.14em] uppercase text-primary mb-3">Our promise</p>
+        <h2 class="font-display heading-tight text-xl sm:text-3xl text-[var(--foreground)] mb-6">
+          Upfront quotes. Certified installation. Written warranties. Always.
+        </h2>
+        <p class="text-sm text-[var(--muted-foreground)] leading-relaxed mb-8">
+          There are no hidden fees or installation pressure. If a repair or setup isn't economical, we will tell you honestly. We value client relationships over a quick sale. That's why Ahmednagar keeps coming back to Mansha Enterprises.
+        </p>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full max-w-md sm:max-w-none">
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center h-12 sm:h-11 px-8 rounded-full bg-[#0A0A0A] dark:bg-white text-white dark:text-[#0A0A0A] text-sm font-semibold transition-all shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[var(--background)] w-full sm:w-auto"
+          >
+            Get Directions
+          </a>
+          <WhatsAppButton
+            message="Hi, I'd like to find out more about Mansha Enterprises."
+            label="WhatsApp Us"
+            size="md"
+            variant="outline"
+            class="w-full sm:w-auto h-12 sm:h-11"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

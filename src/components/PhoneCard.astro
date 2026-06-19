@@ -1,0 +1,70 @@
+---
+/**
+ * Phone listing card — used on the Buy Second-Hand Phones page.
+ *
+ * Props match the shape of src/data/phones.js entries.
+ */
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  model: string;
+  brand: string;
+  storage: string;
+  color: string;
+  condition: 'Excellent' | 'Good' | 'Fair';
+  price: string;
+  notes?: string;
+  whatsappMsg: string;
+}
+
+const {
+  model,
+  brand,
+  storage,
+  color,
+  condition,
+  price,
+  notes,
+  whatsappMsg,
+} = Astro.props;
+
+/* Condition badge color */
+const conditionStyle = {
+  Excellent: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+  Good:      'bg-blue-500/10  text-blue-600 dark:text-blue-400 border-blue-500/20',
+  Fair:      'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+}[condition];
+---
+
+<div class="card-chrome flex flex-col hover:shadow-[var(--shadow-lift)] transition-all duration-200 group rounded-2xl">
+  <!-- Details -->
+  <div class="flex flex-col flex-1 gap-3 p-5">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <p class="text-xs text-[var(--muted-foreground)] font-medium uppercase tracking-wide">{brand}</p>
+        <h3 class="font-semibold text-[var(--foreground)] text-base leading-snug mt-1">{model}</h3>
+        <p class="text-sm text-[var(--muted-foreground)] mt-0.5">{storage} · {color}</p>
+      </div>
+      <!-- Condition badge -->
+      <span class:list={['text-[10px] font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider shrink-0 mt-0.5', conditionStyle]}>
+        {condition}
+      </span>
+    </div>
+
+    {notes && (
+      <p class="text-xs text-[var(--muted-foreground)] bg-[#D4A017]/[0.04] border border-[#D4A017]/10 rounded-md px-3 py-2 leading-relaxed">{notes}</p>
+    )}
+
+    <!-- Price + CTA -->
+    <div class="flex flex-col gap-3 mt-auto pt-2">
+      <p class="text-xl font-bold text-[var(--foreground)] tracking-tight">{price}</p>
+      <WhatsAppButton
+        message={whatsappMsg}
+        label="Enquire on WhatsApp"
+        size="md"
+        variant="outline"
+        fullWidth
+      />
+    </div>
+  </div>
+</div>

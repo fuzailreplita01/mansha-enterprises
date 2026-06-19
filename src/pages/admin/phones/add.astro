@@ -1,0 +1,156 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Add New Phone">
+  <div class="max-w-2xl mx-auto space-y-6 sm:space-y-8">
+    <header>
+      <a href="/admin/phones" class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-brand transition-colors flex items-center gap-1 mb-4 group">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+        Back to Inventory
+      </a>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight mb-1.5">Add New Phone</h1>
+      <p class="text-muted-foreground text-xs sm:text-sm font-medium">Create a new second-hand phone listing.</p>
+    </header>
+
+    <div class="bg-card border border-border p-5 sm:p-8 md:p-10 rounded-[1.5rem] sm:rounded-[2rem] shadow-xl relative overflow-hidden">
+      <!-- Decorator glow -->
+      <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand/5 blur-[80px] rounded-full -z-0"></div>
+
+      <form id="add-phone-form" class="relative z-10 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-1.5">
+            <label for="model" class="text-[10px] font-bold text-brand uppercase tracking-widest">Phone Model</label>
+            <input 
+              type="text" 
+              id="model" 
+              name="model" 
+              required 
+              placeholder="e.g. iPhone 13 Pro"
+              class="w-full h-12 bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-2xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground"
+            />
+          </div>
+          
+          <div class="space-y-1.5">
+            <label for="price" class="text-[10px] font-bold text-brand uppercase tracking-widest">Price (₹)</label>
+            <input 
+              type="number" 
+              id="price" 
+              name="price" 
+              required 
+              placeholder="e.g. 45000"
+              class="w-full h-12 bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-2xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-1.5 relative">
+          <label for="condition" class="text-[10px] font-bold text-brand uppercase tracking-widest">Condition</label>
+          <div class="relative">
+            <select 
+              id="condition" 
+              name="condition" 
+              required
+              class="w-full h-12 bg-card border border-border hover:border-brand/30 focus:border-brand rounded-2xl px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground appearance-none cursor-pointer"
+            >
+              <option value="Like New">Like New</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+            </select>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="description" class="text-[10px] font-bold text-brand uppercase tracking-widest">Description</label>
+          <textarea 
+            id="description" 
+            name="description" 
+            rows="4"
+            placeholder="Describe the phone's storage, battery health, any scratches, etc."
+            class="w-full bg-muted/20 border border-border hover:border-brand/30 focus:border-brand rounded-2xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all text-foreground resize-none"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center gap-3 p-4 bg-muted/20 border border-border/80 rounded-2xl group hover:border-brand/20 transition-colors">
+          <input 
+            type="checkbox" 
+            id="sold" 
+            name="sold" 
+            class="w-5 h-5 rounded-lg border-border text-brand bg-muted focus:ring-brand/20 transition-all cursor-pointer accent-brand" 
+          />
+          <label for="sold" class="text-sm font-bold text-foreground cursor-pointer select-none">Mark as Sold</label>
+        </div>
+
+        <div id="status-message" class="hidden text-xs p-4 rounded-2xl border text-center font-semibold transition-all animate-in fade-in"></div>
+
+        <button 
+          type="submit" 
+          id="submit-btn"
+          class="w-full inline-flex items-center justify-center h-13 px-6 rounded-2xl bg-brand hover:bg-brand-dark text-ink font-bold text-sm transition-all shadow-lg hover:shadow-brand/20 hover:scale-[1.01] active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand cursor-pointer"
+        >
+          Create Listing
+        </button>
+      </form>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../../db/supabase';
+
+  const form = document.getElementById('add-phone-form') as HTMLFormElement;
+  const statusMsg = document.getElementById('status-message');
+  const submitBtn = document.getElementById('submit-btn');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!supabase) return;
+
+    if (statusMsg) {
+      statusMsg.classList.add('hidden');
+      statusMsg.className = 'hidden text-xs p-4 rounded-2xl border text-center font-semibold transition-all animate-in fade-in';
+    }
+    
+    if (submitBtn) {
+      submitBtn.innerHTML = `
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded-full border-2 border-ink/20 border-t-ink animate-spin"></div>
+          Creating Listing...
+        </div>
+      `;
+      (submitBtn as HTMLButtonElement).disabled = true;
+    }
+
+    const formData = new FormData(form);
+    const payload = {
+      model: formData.get('model'),
+      price: parseInt(formData.get('price') as string),
+      condition: formData.get('condition'),
+      description: formData.get('description'),
+      sold: formData.get('sold') === 'on',
+    };
+
+    const { error } = await supabase.from('phones').insert(payload);
+
+    if (error) {
+      statusMsg?.classList.remove('hidden');
+      statusMsg?.classList.add('bg-destructive/10', 'border-destructive/20', 'text-destructive');
+      if (statusMsg) statusMsg.textContent = 'Error: ' + error.message;
+      if (submitBtn) {
+        submitBtn.innerHTML = 'Create Listing';
+        (submitBtn as HTMLButtonElement).disabled = false;
+      }
+    } else {
+      statusMsg?.classList.remove('hidden');
+      statusMsg?.classList.add('bg-green-500/10', 'border-green-500/20', 'text-green-600', 'dark:text-green-400');
+      if (statusMsg) statusMsg.textContent = 'Listing created successfully! Redirecting back to inventory...';
+      setTimeout(() => {
+        window.location.href = '/admin/phones';
+      }, 1500);
+    }
+  });
+</script>

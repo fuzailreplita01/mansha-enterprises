@@ -1,0 +1,64 @@
+﻿---
+/**
+ * Service card â€” used on the Services page and Home overview grid.
+ *
+ * Props:
+ *   icon         â€” emoji or SVG string
+ *   title        â€” service name
+ *   description  â€” short description (1â€“2 sentences for home, longer for services page)
+ *   href         â€” internal link (e.g. '/services#screen-replacement')
+ *   whatsappMsg  â€” pre-filled WhatsApp message
+ *   cta          â€” button label (default 'Get a Quote')
+ */
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  icon: string;
+  title: string;
+  description: string;
+  href?: string;
+  whatsappMsg?: string;
+  cta?: string;
+}
+
+const {
+  icon,
+  title,
+  description,
+  href,
+  whatsappMsg = `Hi, I need help with: ${title}. Can I get a quote?`,
+  cta = 'Get a Quote',
+} = Astro.props;
+---
+
+<div class="card-chrome group flex flex-col gap-4 p-6 hover:shadow-[var(--shadow-lift)] transition-all duration-200">
+  <!-- Icon -->
+  <div class="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#D4A017]/10 text-[#D4A017] border border-[#D4A017]/20 shrink-0 shadow-[0_0_15px_rgba(212,160,23,0.15)] group-hover:shadow-[0_0_25px_rgba(212,160,23,0.30)] transition-all">
+    <Fragment set:html={icon} />
+  </div>
+
+  <!-- Text -->
+  <div class="flex-1 space-y-1.5">
+    <h3 class="font-semibold text-[var(--foreground)] tracking-tight">{title}</h3>
+    <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">{description}</p>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex flex-row items-center gap-2 mt-auto pt-2 w-full">
+    <WhatsAppButton
+      message={whatsappMsg}
+      label={cta}
+      size="sm"
+      variant="outline"
+      class="flex-1"
+    />
+    {href && (
+      <a
+        href={href}
+        class="inline-flex flex-1 items-center justify-center h-8 px-4 rounded-full bg-foreground text-background dark:bg-white dark:text-ink text-xs font-black transition-all shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-1 focus-visible:ring-offset-background uppercase tracking-wider"
+      >
+        Learn more →
+      </a>
+    )}
+  </div>
+</div>

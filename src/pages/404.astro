@@ -1,0 +1,66 @@
+---
+/**
+ * 404 — Page Not Found.
+ * Astro automatically serves this file for unknown routes in both static and SSR mode.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page Not Found"
+  description="The page you're looking for doesn't exist."
+  noIndex
+>
+  <section class="bg-[var(--background)] min-h-[60vh] flex items-center relative overflow-hidden" aria-labelledby="error-404-heading">
+    <!-- Ambient brand glow -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
+      <div class="w-[800px] h-[400px] rounded-full opacity-10" style="background: radial-gradient(ellipse at center, rgba(250,255,105,0.5) 0%, transparent 65%);"></div>
+    </div>
+    
+    <div class="container-page py-16 text-center relative z-10">
+      <!-- Large error code -->
+      <p class="font-display text-[9rem] sm:text-[12rem] font-semibold text-[var(--muted)] leading-none select-none" aria-hidden="true">404</p>
+
+      <div class="-mt-6 sm:-mt-10 relative z-10 space-y-4">
+        <h1 id="error-404-heading" class="font-display heading-tight text-3xl sm:text-4xl text-[var(--foreground)]">
+          Page not <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand via-brand-accent to-brand">found.</span>
+        </h1>
+        <p class="text-sm text-[var(--muted-foreground)] max-w-xs mx-auto">
+          Sorry, we couldn't find what you were looking for. Try one of the links below.
+        </p>
+
+        <!-- Quick nav links -->
+        <nav class="flex flex-wrap items-center justify-center gap-2 mt-8" aria-label="Helpful links">
+          {[
+            { href: '/',            label: 'Home' },
+            { href: '/services',    label: 'Services' },
+            { href: '/buy-phones',  label: 'Buy Phones' },
+            { href: '/book-repair', label: 'Book a Service' },
+            { href: '/contact',     label: 'Contact' },
+          ].map(({ href, label }) => (
+            <a
+              href={href}
+              class="flex items-center gap-2 px-4 py-2 rounded-full bg-brand/[0.08] border border-brand/[0.18] text-sm text-[#E8C060] hover:bg-brand/[0.15] transition-colors font-semibold"
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+
+        <p class="text-xs text-slate-400 mt-4">
+          Need help?{' '}
+          <a href="tel:+917262080880" class="text-primary hover:underline font-semibold">+91 72620 80880</a>
+          {' '}or{' '}
+          <a
+            href={`https://wa.me/917262080880?text=${encodeURIComponent("Hi, I need help finding something on your website.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-wa hover:underline font-semibold"
+          >
+            WhatsApp us
+          </a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

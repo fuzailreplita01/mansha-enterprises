@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { supabase } from '../../db/supabase';
+
+---
+
+<BaseLayout 
+  title="Admin Login" 
+  description="Sign in to manage Mansha Enterprises."
+  showHeader={false}
+  showFooter={false}
+  showMobileNav={false}
+  noIndex={true}
+>
+  <div class="flex flex-col min-h-screen items-center justify-center p-6 relative overflow-hidden bg-background">
+    <!-- Ambient Glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand/10 blur-[150px] rounded-full -z-10 opacity-60"></div>
+    
+    <div class="w-full max-w-md">
+      <div class="bg-card/80 backdrop-blur-2xl border border-border p-8 md:p-10 rounded-3xl shadow-2xl relative">
+        <!-- Decorative Corner -->
+        <div class="absolute -top-1 -right-1 w-12 h-12 border-t border-r border-brand/30 rounded-tr-3xl"></div>
+        
+        <div class="text-center mb-10">
+          <img src="/images/logo-stacked-light.svg" alt="Mansha Enterprises" class="h-28 w-auto mx-auto mb-6 dark:hidden" />
+          <img src="/images/logo-stacked-dark.svg" alt="Mansha Enterprises" class="h-28 w-auto mx-auto mb-6 hidden dark:block" />
+          <h1 class="text-2xl font-bold tracking-tight mb-1 text-foreground">Admin Panel</h1>
+          <p class="text-sm text-muted-foreground font-medium">Please sign in to continue</p>
+        </div>
+
+        <form id="login-form" class="space-y-6">
+          <div class="space-y-2">
+            <label for="email" class="eyebrow opacity-80">Email Address</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              required 
+              placeholder="admin@mansha-enterprises.com"
+              class="w-full h-12 bg-muted/50 border border-border rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all placeholder:text-muted-foreground/30 text-foreground"
+            />
+          </div>
+          
+          <div class="space-y-2">
+            <label for="password" class="eyebrow opacity-80">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              required 
+              placeholder="••••••••"
+              class="w-full h-12 bg-muted/50 border border-border rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 transition-all placeholder:text-muted-foreground/30 text-foreground"
+            />
+          </div>
+
+          <div id="error-message" class="hidden text-xs text-destructive bg-destructive/10 p-3 rounded-lg border border-destructive/20 text-center font-bold uppercase tracking-widest">
+            Invalid credentials. Please try again.
+          </div>
+
+          <button 
+            type="submit" 
+            id="submit-btn"
+            class="inline-flex items-center justify-center h-12 w-full rounded-xl bg-foreground text-background dark:bg-white dark:text-ink text-sm font-bold transition-all shadow-lg hover:shadow-brand/20 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand group cursor-pointer"
+          >
+            Sign In
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right ml-2 group-hover:translate-x-1 transition-transform"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </form>
+        
+        <div class="mt-8 pt-8 border-t border-border text-center">
+          <a href="/" class="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-brand transition-colors flex items-center justify-center gap-1 group">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+            Back to website
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { supabase } from '../../db/supabase';
+
+  const form = document.getElementById('login-form') as HTMLFormElement;
+  const errorMsg = document.getElementById('error-message');
+  const submitBtn = document.getElementById('submit-btn');
+
+  // Check if already logged in
+  async function checkSession() {
+    if (!supabase) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      window.location.href = '/admin';
+    }
+  }
+
+  checkSession();
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!supabase) return;
+
+    errorMsg?.classList.add('hidden');
+    if (submitBtn) {
+      submitBtn.innerHTML = 'Signing in...';
+      (submitBtn as HTMLButtonElement).disabled = true;
+    }
+
+    const formData = new FormData(form);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      errorMsg?.classList.remove('hidden');
+      if (errorMsg) errorMsg.textContent = error.message;
+      if (submitBtn) {
+        submitBtn.innerHTML = 'Sign In <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right ml-2 transition-transform"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+        (submitBtn as HTMLButtonElement).disabled = false;
+      }
+    } else {
+      window.location.href = '/admin';
+    }
+  });
+</script>

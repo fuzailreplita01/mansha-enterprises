@@ -1,0 +1,141 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Dashboard">
+  <div class="space-y-10">
+    <header>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight mb-1 sm:mb-2">Welcome, Admin</h1>
+      <p class="text-xs sm:text-sm text-muted-foreground">Here's what's happening at Mansha Enterprises today.</p>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="card-chrome p-6 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-brand/5 blur-2xl rounded-full -mr-12 -mt-12 group-hover:bg-brand/10 transition-colors"></div>
+        <p class="eyebrow mb-4 opacity-70">Total Enquiries</p>
+        <div class="flex items-end justify-between relative z-10">
+          <span id="stat-enquiries" class="text-3xl sm:text-4xl font-bold">...</span>
+          <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center text-brand border border-brand/20 shadow-[0_0_15px_rgba(212,160,23,0.1)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-chrome p-6 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-brand/5 blur-2xl rounded-full -mr-12 -mt-12 group-hover:bg-brand/10 transition-colors"></div>
+        <p class="eyebrow mb-4 opacity-70">Active Inventory</p>
+        <div class="flex items-end justify-between relative z-10">
+          <span id="stat-phones" class="text-3xl sm:text-4xl font-bold">...</span>
+          <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center text-brand border border-brand/20 shadow-[0_0_15px_rgba(212,160,23,0.1)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smartphone"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-chrome p-6 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-brand/5 blur-2xl rounded-full -mr-12 -mt-12 group-hover:bg-brand/10 transition-colors"></div>
+        <p class="eyebrow mb-4 opacity-70">Sold Items</p>
+        <div class="flex items-end justify-between relative z-10">
+          <span id="stat-sold" class="text-3xl sm:text-4xl font-bold">...</span>
+          <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center text-brand border border-brand/20 shadow-[0_0_15px_rgba(212,160,23,0.1)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg sm:text-xl font-bold">Recent Enquiries</h2>
+          <a href="/admin/enquiries" class="text-xs font-bold text-brand hover:underline underline-offset-4 uppercase tracking-widest">View All →</a>
+        </div>
+        <div id="recent-enquiries-list" class="space-y-4">
+          <div class="animate-pulse flex space-x-4 p-4 rounded-2xl bg-muted border border-border">
+            <div class="rounded-full bg-accent h-10 w-10"></div>
+            <div class="flex-1 space-y-2 py-1">
+              <div class="h-2 bg-accent rounded w-3/4"></div>
+              <div class="h-2 bg-accent rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg sm:text-xl font-bold">Latest Inventory</h2>
+          <a href="/admin/phones" class="text-xs font-bold text-brand hover:underline underline-offset-4 uppercase tracking-widest">Manage Stock →</a>
+        </div>
+        <div id="latest-inventory-list" class="space-y-4">
+          <div class="animate-pulse flex space-x-4 p-4 rounded-2xl bg-muted border border-border">
+            <div class="rounded-xl bg-accent h-12 w-12"></div>
+            <div class="flex-1 space-y-2 py-1">
+              <div class="h-2 bg-accent rounded w-2/3"></div>
+              <div class="h-2 bg-accent rounded w-1/4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../db/supabase';
+
+  async function loadDashboard() {
+    if (!supabase) return;
+
+    // Fetch counts
+    const { count: enquiriesCount } = await supabase.from('enquiries').select('*', { count: 'exact', head: true });
+    const { count: phonesCount } = await supabase.from('phones').select('*', { count: 'exact', head: true }).eq('sold', false);
+    const { count: soldCount } = await supabase.from('phones').select('*', { count: 'exact', head: true }).eq('sold', true);
+
+    document.getElementById('stat-enquiries')!.textContent = enquiriesCount?.toString() || '0';
+    document.getElementById('stat-phones')!.textContent = phonesCount?.toString() || '0';
+    document.getElementById('stat-sold')!.textContent = soldCount?.toString() || '0';
+
+    // Fetch recent enquiries
+    const { data: enquiries } = await supabase.from('enquiries').select('*').order('created_at', { ascending: false }).limit(3);
+    const enquiriesContainer = document.getElementById('recent-enquiries-list');
+    if (enquiries && enquiries.length > 0) {
+      enquiriesContainer!.innerHTML = enquiries.map(e => `
+        <div onclick="window.location.href='/admin/enquiries'" class="p-4 rounded-2xl bg-card border border-border hover:border-brand/30 hover:bg-accent/30 transition-all group cursor-pointer shadow-sm">
+          <div class="flex items-center justify-between mb-1">
+            <p class="font-bold text-sm text-foreground group-hover:text-brand transition-colors">${e.name}</p>
+            <span class="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">${new Date(e.created_at).toLocaleDateString()}</span>
+          </div>
+          <p class="text-xs text-muted-foreground font-medium">${e.device || 'General Inquiry'} • ${e.phone}</p>
+        </div>
+      `).join('');
+    } else {
+      enquiriesContainer!.innerHTML = '<p class="text-sm text-muted-foreground opacity-50 italic px-4">No enquiries yet.</p>';
+    }
+
+    // Fetch latest inventory
+    const { data: phones } = await supabase.from('phones').select('*').order('created_at', { ascending: false }).limit(3);
+    const inventoryContainer = document.getElementById('latest-inventory-list');
+    if (phones && phones.length > 0) {
+      inventoryContainer!.innerHTML = phones.map(p => `
+        <div onclick="window.location.href='/admin/phones'" class="p-4 rounded-2xl bg-card border border-border hover:border-brand/30 hover:bg-accent/30 transition-all flex items-center gap-4 group cursor-pointer shadow-sm">
+          <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center text-brand border border-brand/20 shrink-0 shadow-[0_0_15px_rgba(212,160,23,0.05)]">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+          </div>
+          <div class="flex-grow">
+            <div class="flex items-center justify-between">
+              <p class="font-bold text-sm text-foreground group-hover:text-brand transition-colors">${p.model}</p>
+              <p class="text-xs font-bold text-brand">₹${p.price?.toLocaleString()}</p>
+            </div>
+            <p class="text-xs text-muted-foreground font-medium">${p.condition} • ${p.sold ? '<span class="text-destructive/80 font-bold uppercase tracking-tighter text-[9px]">Sold</span>' : '<span class="text-green-600/80 font-bold uppercase tracking-tighter text-[9px]">In Stock</span>'}</p>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      inventoryContainer!.innerHTML = '<p class="text-sm text-muted-foreground opacity-50 italic px-4">No inventory added yet.</p>';
+    }
+  }
+
+  loadDashboard();
+</script>

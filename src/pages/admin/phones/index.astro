@@ -1,0 +1,252 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Phone Inventory">
+  <div class="space-y-8">
+    <!-- Header Section -->
+    <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center text-brand border border-brand/20 shadow-[0_0_15px_rgba(212,160,23,0.1)]">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+          </div>
+          <h1 class="text-3xl font-bold tracking-tight">Phone Inventory</h1>
+        </div>
+        <p class="text-muted-foreground text-sm font-medium">Manage stock, prices, and availability of pre-owned devices.</p>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        <div class="relative group">
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-brand transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input 
+            type="text" 
+            id="search-input"
+            placeholder="Search model or condition..." 
+            class="h-12 pl-11 pr-4 rounded-2xl bg-card border border-border text-sm focus:outline-none focus:ring-2 focus:ring-brand/50 w-full sm:w-72 transition-all shadow-sm group-hover:border-brand/30"
+          />
+        </div>
+        <a href="/admin/phones/add" class="inline-flex items-center justify-center h-12 px-6 rounded-2xl bg-foreground text-background dark:bg-white dark:text-ink text-sm font-bold transition-all shadow-lg hover:shadow-brand/20 hover:scale-[1.02] active:scale-[0.98]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          Add Device
+        </a>
+      </div>
+    </header>
+
+    <!-- Table Container -->
+    <div class="bg-card border border-border rounded-[2rem] overflow-hidden shadow-xl flex flex-col min-h-[500px]">
+      <div class="overflow-x-auto flex-grow">
+        <table class="w-full text-left border-collapse min-w-[700px]">
+          <thead>
+            <tr class="bg-muted/30 border-b border-border">
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Device Details</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Pricing</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Condition</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-center">Availability</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-table-body" class="divide-y divide-border/50">
+            <!-- Loading state placeholder -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="px-8 py-6 border-t border-border bg-muted/10 flex flex-col sm:row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
+          <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+            Showing <span id="showing-range" class="text-foreground">...</span> of <span id="total-count" class="text-foreground">...</span> devices
+          </p>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <button id="prev-page" class="w-10 h-10 flex items-center justify-center rounded-xl border border-border hover:bg-accent hover:text-brand disabled:opacity-20 disabled:pointer-events-none transition-all">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <div id="page-numbers" class="flex items-center gap-1.5"></div>
+          <button id="next-page" class="w-10 h-10 flex items-center justify-center rounded-xl border border-border hover:bg-accent hover:text-brand disabled:opacity-20 disabled:pointer-events-none transition-all">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../../db/supabase';
+
+  let currentPage = 1;
+  const pageSize = 10;
+  let searchQuery = '';
+  let totalEntries = 0;
+
+  const tbody = document.getElementById('inventory-table-body');
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const prevBtn = document.getElementById('prev-page') as HTMLButtonElement;
+  const nextBtn = document.getElementById('next-page') as HTMLButtonElement;
+  const showingRange = document.getElementById('showing-range');
+  const totalCountEl = document.getElementById('total-count');
+  const pageNumbers = document.getElementById('page-numbers');
+
+  async function loadInventory() {
+    if (!supabase) return;
+
+    tbody!.innerHTML = `
+      <tr>
+        <td colspan="5" class="px-8 py-32 text-center">
+          <div class="flex flex-col items-center gap-4">
+            <div class="relative w-12 h-12">
+               <div class="absolute inset-0 rounded-full border-4 border-brand/10"></div>
+               <div class="absolute inset-0 rounded-full border-4 border-t-brand animate-spin"></div>
+            </div>
+            <p class="text-sm font-bold uppercase tracking-widest text-muted-foreground opacity-50">Synchronizing Stock...</p>
+          </div>
+        </td>
+      </tr>
+    `;
+
+    const from = (currentPage - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    let query = supabase.from('phones').select('*', { count: 'exact' });
+    if (searchQuery) query = query.ilike('model', `%${searchQuery}%`);
+
+    const { data: phones, count, error } = await query
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      tbody!.innerHTML = `<tr><td colspan="5" class="px-8 py-20 text-center text-destructive font-bold uppercase tracking-widest text-xs">Error: ${error.message}</td></tr>`;
+      return;
+    }
+
+    totalEntries = count || 0;
+    renderTable(phones || []);
+    renderPagination();
+  }
+
+  function renderTable(phones: any[]) {
+    if (phones.length === 0) {
+      tbody!.innerHTML = `
+        <tr>
+          <td colspan="5" class="px-8 py-32 text-center">
+            <div class="flex flex-col items-center gap-4 opacity-40">
+              <svg class="w-16 h-16 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <p class="text-sm font-bold uppercase tracking-[0.2em]">No matching inventory found</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      showingRange!.textContent = '0';
+      totalCountEl!.textContent = '0';
+      return;
+    }
+
+    tbody!.innerHTML = phones.map(p => `
+      <tr class="hover:bg-accent/30 transition-colors group">
+        <td class="px-6 py-3.5">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center text-brand border border-brand/20 shrink-0 shadow-[0_0_10px_rgba(212,160,23,0.05)]">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            </div>
+            <div>
+              <p class="font-bold text-[var(--foreground)] group-hover:text-brand transition-colors text-sm">${p.model}</p>
+              <p class="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Listed ${new Date(p.created_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}</p>
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-3.5 text-sm font-black text-brand tracking-tight">
+          ₹${p.price?.toLocaleString()}
+        </td>
+        <td class="px-6 py-3.5">
+          <span class="inline-flex items-center px-3 py-1 rounded-lg bg-accent text-[10px] font-black uppercase tracking-tighter text-foreground border border-border group-hover:border-brand/20 transition-colors">
+            ${p.condition}
+          </span>
+        </td>
+        <td class="px-6 py-3.5 text-center">
+          ${p.sold 
+            ? '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-destructive/10 text-[9px] font-black uppercase tracking-[0.1em] text-destructive border border-destructive/20 shadow-sm shadow-destructive/5">Sold Out</span>' 
+            : '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-[9px] font-black uppercase tracking-[0.1em] text-green-600 dark:text-green-400 border border-green-500/20 shadow-sm shadow-green-500/5">In Stock</span>'}
+        </td>
+        <td class="px-6 py-3.5 text-right">
+          <div class="flex items-center justify-end gap-2">
+            <button onclick="window.location.href='/admin/phones/edit?id=${p.id}'" class="w-8 h-8 flex items-center justify-center rounded-xl bg-muted/50 text-muted-foreground hover:bg-brand/10 hover:text-brand hover:scale-105 transition-all border border-transparent hover:border-brand/20" title="Edit Listing">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button data-id="${p.id}" class="delete-phone-btn w-8 h-8 flex items-center justify-center rounded-xl bg-muted/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:scale-105 transition-all border border-transparent hover:border-destructive/20" title="Delete Listing">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    const start = (currentPage - 1) * pageSize + 1;
+    const end = Math.min(currentPage * pageSize, totalEntries);
+    showingRange!.textContent = `${start}-${end}`;
+    totalCountEl!.textContent = totalEntries.toString();
+
+    document.querySelectorAll('.delete-phone-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = (e.currentTarget as HTMLElement).dataset.id;
+        if (confirm('Permanently delete this phone listing? This cannot be undone.')) {
+          const { error } = await supabase!.from('phones').delete().eq('id', id);
+          if (error) alert('Error: ' + error.message);
+          else loadInventory();
+        }
+      });
+    });
+  }
+
+  function renderPagination() {
+    const totalPages = Math.ceil(totalEntries / pageSize);
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+    let pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        pages.push(i);
+      } else if (i === currentPage - 2 || i === currentPage + 2) {
+        if (pages[pages.length - 1] !== '...') pages.push('...');
+      }
+    }
+
+    pageNumbers!.innerHTML = pages.map(p => {
+      if (p === '...') return `<span class="px-2 text-muted-foreground opacity-50">...</span>`;
+      return `
+        <button 
+          data-page="${p}" 
+          class="page-num-btn w-10 h-10 rounded-xl text-xs font-black transition-all ${p === currentPage ? 'bg-brand text-ink shadow-lg shadow-brand/20 scale-105' : 'hover:bg-accent text-muted-foreground hover:text-foreground border border-border'}"
+        >
+          ${p}
+        </button>
+      `;
+    }).join('');
+
+    document.querySelectorAll('.page-num-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        currentPage = parseInt((e.currentTarget as HTMLElement).dataset.page!);
+        loadInventory();
+      });
+    });
+  }
+
+  let searchTimeout: any;
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = (e.target as HTMLInputElement).value;
+      currentPage = 1;
+      loadInventory();
+    }, 400);
+  });
+
+  prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; loadInventory(); } });
+  nextBtn.addEventListener('click', () => { if (currentPage < Math.ceil(totalEntries / pageSize)) { currentPage++; loadInventory(); } });
+
+  loadInventory();
+</script>

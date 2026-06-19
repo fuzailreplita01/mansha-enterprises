@@ -1,0 +1,107 @@
+---
+/**
+ * Book a Repair page — contains the enquiry form (RepairForm component).
+ * Form submits directly to Supabase from the browser — no server endpoint needed.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import RepairForm from '../components/RepairForm.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+---
+
+<BaseLayout
+  title="Book a Service / Enquiry Ahmednagar"
+  description="Request product quotes, AC servicing, water purifier setup, or mobile repairs in Ahmednagar online. Same-day response from Mansha Enterprises. Call +917262080880."
+>
+
+  <!-- ── Page header ── -->
+  <PageHero
+    eyebrow="Booking"
+    title="Book a Service or Enquiry in <span class='bg-clip-text text-transparent bg-gradient-to-r from-brand via-brand-accent to-brand'>Ahmednagar.</span>"
+    subtitle="Fill in the form and we will confirm your appointment or request details within a few hours. Prefer to speak directly? Call or WhatsApp us."
+  />
+
+  <!-- ── Main content: form + aside ── -->
+  <section class="bg-[var(--muted)] py-12 sm:py-16">
+    <div class="container-page">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+        <!-- Form — takes 2/3 on desktop -->
+        <div class="lg:col-span-2">
+          <RepairForm
+            title="Service & Sales Enquiry Form"
+            context="book-repair page"
+          />
+        </div>
+
+        <!-- Aside: quick contact info -->
+        <aside class="space-y-4" aria-label="Quick contact options">
+
+          <div class="card-chrome p-5 space-y-4">
+            <h2 class="font-semibold text-[var(--foreground)] text-sm tracking-tight">Prefer a quicker response?</h2>
+
+            <div class="flex flex-col gap-2">
+              <!-- WhatsApp -->
+              <WhatsAppButton
+                message="Hi, I'd like to ask about a product or book a service. My enquiry details: "
+                label="WhatsApp Us"
+                size="md"
+                fullWidth
+              />
+              <!-- Call -->
+              <a
+                href="tel:+917262080880"
+                class="inline-flex items-center justify-center gap-2 h-11 rounded-full border border-[var(--border)] text-sm font-medium text-[var(--foreground)] bg-[var(--card)] hover:bg-[var(--accent)] transition-colors w-full"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 .97h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91A16 16 0 0015.1 17.9l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+                Call +91 72620 80880
+              </a>
+            </div>
+          </div>
+
+          <!-- Location + hours card -->
+          <div class="card-chrome p-5 space-y-3 text-sm text-[var(--muted-foreground)]">
+            <h2 class="font-semibold text-[var(--foreground)] tracking-tight">Visit us</h2>
+            <p class="leading-relaxed flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-brand shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Alamgirnagar, Ahmednagar
+            </p>
+            <div class="space-y-1 text-xs">
+              <p class="font-medium text-[var(--foreground)]">Opening Hours</p>
+              <p>Mon – Sat: 9:00 AM – 8:00 PM</p>
+              <p>Sunday: 10:00 AM – 6:00 PM</p>
+            </div>
+            <a
+              href="/contact"
+              class="inline-flex items-center gap-1 text-xs text-brand hover:text-brand-dark font-medium transition-colors"
+            >
+              Get directions →
+            </a>
+          </div>
+
+          <!-- What to expect -->
+          <div class="card-chrome p-5 space-y-3 text-sm">
+            <h2 class="font-semibold text-[var(--foreground)] tracking-tight">What to expect</h2>
+            <ol class="space-y-2 text-[var(--muted-foreground)]" role="list">
+              {[
+                "We'll contact you within a few hours to confirm details.",
+                "Schedule a home visit, local delivery, or in-store appointment.",
+                "Get product recommendations and a transparent upfront quote.",
+                "Enjoy quick delivery, professional setup, or same-day repairs.",
+              ].map((step, i) => (
+                <li class="flex items-start gap-2">
+                  <span class="mt-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-brand-soft text-brand text-xs font-semibold shrink-0">{i + 1}</span>
+                  <span class="text-xs leading-relaxed">{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

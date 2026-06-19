@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <radialGradient id="tile" cx="50%" cy="34%" r="75%">
+      <stop offset="0" stop-color="#1A1A12"></stop>
+      <stop offset="1" stop-color="#0A0A0A"></stop>
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#tile)"></rect>
+  <rect x="0.75" y="0.75" width="254.5" height="254.5" rx="55.25" fill="none" stroke="#faff69" stroke-opacity="0.18" stroke-width="1.5"></rect>
+  <g transform="translate(28,24) scale(1.0)">
+    <polyline points="44,152 44,56 100,122 156,56 156,152" fill="none" stroke="#faff69" stroke-width="22" stroke-linecap="square" stroke-linejoin="miter"/>
+  </g>
+</svg>

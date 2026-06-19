@@ -1,0 +1,28 @@
+name: Supabase keep-alive
+
+# Supabase free tier pauses after 7 days of inactivity.
+# This workflow queries a real table every 3 days to prevent that.
+#
+# Required repo secrets (Settings → Secrets → Actions):
+#   SUPABASE_URL              — https://<project-ref>.supabase.co
+#   SUPABASE_SERVICE_ROLE_KEY — service_role key from Project Settings → API
+
+on:
+  schedule:
+    - cron: '0 9 */3 * *'   # 09:00 UTC on days 1, 4, 7, 10 … of each month
+  workflow_dispatch:
+
+jobs:
+  ping:
+    name: Ping Supabase
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Send keep-alive request
+        run: |
+          curl -s "${{ secrets.SUPABASE_URL }}/rest/v1/phones?limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}"
+
+          echo "Supabase keep-alive ping sent."

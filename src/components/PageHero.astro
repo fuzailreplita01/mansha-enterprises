@@ -1,0 +1,76 @@
+---
+/**
+ * Compact dark hero for inner pages.
+ * Matches the aesthetic of SplineHero with interactive elements and glows.
+ *
+ * Props:
+ *   eyebrow  — small label above the title (e.g. "What we do")
+ *   title    — page H1
+ *   subtitle — optional description paragraph
+ *
+ * Slot: extra content rendered below subtitle (e.g. quick-jump pill links)
+ */
+import { Spotlight } from './ui/spotlight';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+}
+
+const { eyebrow, title, subtitle } = Astro.props;
+---
+
+<section class="relative bg-background overflow-hidden py-20 sm:py-28 border-b border-border transition-colors duration-300">
+  <!-- Interactive Spotlight (mouse hover effect) -->
+  <Spotlight client:only="react" size={500} />
+
+  <!-- Animated glowing orbs in background -->
+  <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand/10 rounded-full blur-[120px] animate-pulse [animation-duration:4s] pointer-events-none opacity-50 dark:opacity-100"></div>
+  <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-brand/5 rounded-full blur-[100px] animate-pulse [animation-duration:6s] pointer-events-none opacity-30 dark:opacity-100"></div>
+
+  <!-- Subtle dot-grid texture -->
+  <div
+    class="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
+    aria-hidden="true"
+    style="background-image: radial-gradient(circle, var(--color-brand) 1px, transparent 1px); background-size: 28px 28px;"
+  ></div>
+
+  <!-- Content -->
+  <div class="container-page relative z-10">
+    {eyebrow && (
+      <div class="hero-fade-up inline-flex items-center gap-1.5 mb-5" style="animation-delay: 0ms;">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" aria-hidden="true"></span>
+        <p class="text-brand text-xs font-black tracking-[0.2em] uppercase">
+          {eyebrow}
+        </p>
+      </div>
+    )}
+
+    <h1 class="hero-fade-up heading-tight text-3xl sm:text-5xl lg:text-6xl text-foreground max-w-3xl" style="animation-delay: 100ms;" set:html={title} />
+
+    {subtitle && (
+      <p class="hero-fade-up mt-5 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed [&>strong]:text-foreground [&>strong]:font-black" style="animation-delay: 200ms;" set:html={subtitle} />
+    )}
+
+    <!-- Slot for extra content (quick-jump links, condition legend, etc.) -->
+    <div class="hero-fade-up mt-6" style="animation-delay: 300ms;">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUpAnim 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  @keyframes fadeUpAnim {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

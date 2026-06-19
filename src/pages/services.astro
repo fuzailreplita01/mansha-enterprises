@@ -1,0 +1,277 @@
+---
+/**
+ * Services page — detailed section for each product/service category.
+ * Each item has an ID anchor for deep-linking (e.g. /services#ac-sales).
+ *
+ * Schema: emits Service JSON-LD for each item, helping Google show
+ * rich results for local queries.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import PageHero from '../components/PageHero.astro';
+import { services } from '../data/services.js';
+
+const siteOrigin = 'https://mansha-enterprises.com';
+
+/* Build an ItemList of Service schema entries */
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Products & Services in Ahmednagar — Mansha Enterprises',
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Service',
+      '@id': `${siteOrigin}/services#${s.id}`,
+      name: `${s.title} in Ahmednagar`,
+      serviceType: s.title,
+      description: s.shortDesc,
+      provider: {
+        '@type': 'LocalBusiness',
+        name: 'Mansha Enterprises',
+        '@id': `${siteOrigin}/#localbusiness`,
+      },
+      areaServed: {
+        '@type': 'City',
+        name: 'Ahmednagar',
+      },
+      url: `${siteOrigin}/services#${s.id}`,
+    },
+  })),
+};
+
+const getFeatures = (id) => {
+  if (id.includes('mobile')) {
+    return [
+      { label: "Genuine Parts", icon: "IconWrench" },
+      { label: "Under 2 Hour Repair", icon: "IconBolt" },
+      { label: "Expert Technicians", icon: "IconShield" },
+      { label: "Repair Warranty", icon: "IconTag" }
+    ];
+  } else if (id.includes('ac')) {
+    return [
+      { label: "Certified Installation", icon: "IconWrench" },
+      { label: "Top AC Brands", icon: "IconBolt" },
+      { label: "Gas & Wet Service", icon: "IconShield" },
+      { label: "Service Warranty", icon: "IconTag" }
+    ];
+  } else {
+    return [
+      { label: "RO+UV+Copper Systems", icon: "IconWrench" },
+      { label: "TDS Calibration", icon: "IconBolt" },
+      { label: "Filter Spares & Spun", icon: "IconShield" },
+      { label: "Safe Water Promise", icon: "IconTag" }
+    ];
+  }
+};
+---
+
+<BaseLayout
+  title="Sales & Service — Mobiles, AC & Water Purifiers"
+  description="Explore Split/Window AC sales & service, RO water purifiers installation, phone retailing, and expert repairs in Alamgirnagar, Ahmednagar. Call +917262080880."
+>
+  <!-- Service schema — injected into <head> -->
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} slot="head" />
+
+  <!-- —— Page header —— -->
+  <PageHero
+    eyebrow="Our Catalog"
+    title="Products & Services in <span class='bg-clip-text text-transparent bg-gradient-to-r from-brand via-brand-accent to-brand'>Ahmednagar.</span>"
+    subtitle="<strong>Mobiles, Air Conditioners, Water Purifiers & Spares</strong> — Sales and professional servicing for leading brands. Reliable support, transparent pricing, and written service warranties."
+  >
+    <div class="mt-6 flex flex-wrap gap-2">
+      {services.map(s => (
+        <a
+          href={`#${s.id}`}
+          class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand/[0.08] border border-brand/[0.18] text-xs text-[#E8C060] hover:bg-brand/[0.15] transition-colors"
+        >
+          {s.title}
+        </a>
+      ))}
+    </div>
+  </PageHero>
+
+  <!-- —— Service sections —— -->
+  <div class="bg-[var(--muted)] py-20 sm:py-32 overflow-hidden relative transition-colors duration-300">
+    
+    <!-- Global background elements -->
+    <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" style="background-image: radial-gradient(circle, var(--primary) 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+    <div class="container-page space-y-32 sm:space-y-48 relative z-10">
+      {services.map((s, i) => (
+        <section
+          id={s.id}
+          aria-labelledby={`service-${s.id}-heading`}
+          class:list={[
+            "flex flex-col lg:items-center gap-16 lg:gap-24 scroll-mt-24 group",
+            i % 2 === 1 ? "lg:flex-row-reverse" : "lg:flex-row"
+          ]}
+        >
+          <!-- Digital Blueprint Container -->
+          <div class="flex-1 relative flex items-center justify-center">
+            
+            <!-- Ambient Glow -->
+            <div class="absolute w-[400px] h-[400px] rounded-full bg-brand/5 blur-[100px] pointer-events-none group-hover:bg-brand/10 transition-colors duration-700"></div>
+            
+            <!-- Blueprint Frames -->
+            <div class="absolute w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] border border-brand/10 rounded-full pointer-events-none scale-90 group-hover:scale-100 transition-transform duration-1000"></div>
+            <div class="absolute w-[240px] h-[240px] sm:w-[300px] sm:h-[300px] border border-brand/5 rounded-full pointer-events-none scale-110 group-hover:scale-95 transition-transform duration-1000"></div>
+
+            <!-- The "Mockup" Frame -->
+            <div class="relative z-10 w-full max-w-[420px] aspect-[4/3] rounded-3xl border border-[var(--border)] bg-[var(--card)] shadow-2xl overflow-hidden p-1 transition-transform duration-500 group-hover:translate-y-[-8px]">
+               <!-- Inner Image -->
+               <div class="relative w-full h-full rounded-[1.4rem] overflow-hidden">
+                 <img
+                   src={s.image}
+                   alt=""
+                   class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1 brightness-[0.95] dark:brightness-[0.85] contrast-105 dark:contrast-110"
+                   loading="lazy"
+                   aria-hidden="true"
+                 />
+                 <!-- Gradient Overlay -->
+                 <div class="absolute inset-0 bg-gradient-to-t from-[var(--background)]/80 via-transparent to-transparent"></div>
+               </div>
+
+               <!-- HUD Labels -->
+               <div class="absolute top-4 left-4 border-l border-brand/40 pl-2 h-10 flex flex-col justify-center">
+                  <span class="text-[9px] font-mono text-brand/60 uppercase tracking-widest">Specifications</span>
+                  <span class="text-[11px] font-mono text-[var(--foreground)] uppercase font-bold tracking-tight">Product_0{i+1}</span>
+               </div>
+               <div class="absolute bottom-4 right-4 flex flex-col items-end">
+                  <span class="text-[9px] font-mono text-[var(--muted-foreground)] uppercase tracking-tighter italic">Certified Quality</span>
+               </div>
+            </div>
+
+            <!-- Floating Badges -->
+            <div 
+              class:list={[
+                "absolute z-20 bg-[var(--card)]/90 backdrop-blur-md border border-[var(--border)] rounded-2xl px-3.5 py-2.5 shadow-2xl transition-all duration-500 hover:scale-105",
+                i % 2 === 1 ? "-bottom-6 -right-2 sm:right-6" : "-bottom-6 -left-2 sm:left-6"
+              ]}
+            >
+               <div class="flex items-center gap-3">
+                  <span class="w-8 h-8 rounded-full bg-brand/20 flex items-center justify-center border border-brand/30">
+                    <svg class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </span>
+                  <div>
+                    <div class="text-[11px] font-bold text-[var(--foreground)] uppercase tracking-tight">Verified</div>
+                    <div class="text-[9px] text-primary mt-0.5 font-medium italic">100% Satisfaction</div>
+                  </div>
+               </div>
+            </div>
+
+            <div 
+              class:list={[
+                "absolute z-20 bg-[var(--card)]/90 backdrop-blur-md border border-[var(--border)] rounded-2xl px-3.5 py-2.5 shadow-2xl transition-all duration-500 hover:scale-105 hidden sm:block",
+                i % 2 === 1 ? "top-4 -left-10 lg:-left-20" : "top-4 -right-10 lg:-right-20"
+              ]}
+            >
+               <div class="flex items-center gap-3">
+                  <span class="w-8 h-8 rounded-full bg-[var(--accent)] flex items-center justify-center border border-[var(--border)]">
+                    <svg class="w-4 h-4 text-[var(--foreground)]/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </span>
+                  <div>
+                    <div class="text-[11px] font-bold text-[var(--foreground)] uppercase tracking-tight">Quick Service</div>
+                    <div class="text-[9px] text-[var(--muted-foreground)] mt-0.5 font-medium uppercase">Timely Support</div>
+                  </div>
+               </div>
+            </div>
+
+          </div>
+
+          <!-- Content Container -->
+          <div class="flex-1 space-y-8 lg:space-y-10 text-left">
+            <div class="space-y-5">
+              <div class="flex items-center gap-4">
+                <div class="flex items-center justify-center w-12 h-12 rounded-2xl bg-brand/10 text-primary border border-brand/20 shrink-0 shadow-[0_0_15px_rgba(250,255,105,0.15)] group-hover:shadow-[0_0_25px_rgba(250,255,105,0.30)] transition-shadow">
+                  <Fragment set:html={s.icon} />
+                </div>
+                <div>
+                  <span class="text-[10px] font-mono text-brand/60 uppercase tracking-[0.2em]">{`Category // 0${i + 1}`}</span>
+                  <h2 id={`service-${s.id}-heading`} class="font-display heading-tight text-3xl sm:text-5xl text-[var(--foreground)] tracking-tight mt-0.5">
+                    {s.title}
+                  </h2>
+                </div>
+              </div>
+              <p class="text-[var(--muted-foreground)] leading-relaxed text-base sm:text-xl whitespace-pre-line max-w-xl font-medium">
+                {s.fullDesc}
+              </p>
+            </div>
+
+            <!-- Features list -->
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2" role="list">
+              {getFeatures(s.id).map(feat => (
+                <li class="flex items-center gap-3 text-sm text-[var(--foreground)]/70">
+                  <span class="flex items-center justify-center w-6 h-6 rounded-full bg-brand/10 text-primary border border-brand/20">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </span>
+                  {feat.label}
+                </li>
+              ))}
+            </ul>
+
+            <!-- CTA -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4">
+              <WhatsAppButton
+                message={s.whatsappMsg}
+                label="WhatsApp Enquiry"
+                size="md"
+                variant="outline"
+                class="w-full sm:w-auto h-12 sm:h-11"
+              />
+              <a
+                href="/book-repair"
+                class="inline-flex items-center justify-center h-12 sm:h-11 px-8 rounded-full bg-[#0A0A0A] dark:bg-white text-white dark:text-[#0A0A0A] text-sm font-semibold transition-all shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[var(--background)] w-full sm:w-auto"
+              >
+                Enquire Online
+              </a>
+            </div>
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+
+  <!-- —— Bottom CTA —— -->
+  <section class="py-24 bg-[var(--background)] border-t border-[var(--border)] relative overflow-hidden" aria-labelledby="services-cta-heading">
+    <!-- Ambient brand glow -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
+      <div class="w-[800px] h-[400px] rounded-full opacity-10" style="background: radial-gradient(ellipse at center, rgba(250,255,105,0.5) 0%, transparent 65%);"></div>
+    </div>
+
+    <div class="container-page text-center relative z-10">
+      <h2 id="services-cta-heading" class="font-display heading-tight text-3xl sm:text-5xl text-[var(--foreground)]">
+        Looking for something specific?
+      </h2>
+      <p class="mt-6 text-base sm:text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto leading-relaxed">
+        Let us know what product, stabilizer, filter, or phone repair you are looking for. <span class="text-[var(--foreground)]/80">We offer custom quotes and fast delivery.</span>
+      </p>
+      <div class="mt-12 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-md mx-auto sm:max-w-none">
+        <a
+          href="/book-repair"
+          class="inline-flex items-center justify-center h-12 sm:h-11 px-8 rounded-full bg-[#0A0A0A] dark:bg-white text-white dark:text-[#0A0A0A] text-sm font-semibold transition-all shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[var(--background)] w-full sm:w-auto"
+        >
+          Book Service / Enquiry
+        </a>
+        <WhatsAppButton
+          message="Hi, I'd like to ask if a specific product or service is available at Mansha Enterprises."
+          label="WhatsApp Us"
+          size="md"
+          variant="outline"
+          class="w-full sm:w-auto h-12 sm:h-11"
+        />
+      </div>
+      <p class="mt-6 text-xs text-[var(--muted-foreground)]">
+        Prefer to call? <a href="tel:+917262080880" class="font-semibold text-[var(--foreground)] hover:text-brand transition-colors">+91 72620 80880</a>
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>

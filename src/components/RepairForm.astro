@@ -1,0 +1,234 @@
+---
+/**
+ * Shared enquiry and booking form.
+ * Submits directly to Supabase from the browser via fetch (no server endpoint).
+ *
+ * To activate:
+ *   1. Create an `enquiries` table in Supabase with columns:
+ *      name TEXT, phone TEXT, device TEXT, problem TEXT, preferred_contact TEXT, created_at TIMESTAMPTZ DEFAULT now()
+ *   2. Ensure environment variables are loaded in src/db/supabase.js
+ *   3. Enable Row Level Security and add an INSERT policy for anon role.
+ *
+ * Props:
+ *   title    — heading shown above the form
+ *   context  — extra context for the form (not visible, used in WhatsApp fallback)
+ */
+interface Props {
+  title?: string;
+  context?: string;
+}
+
+const {
+  title = 'Book a Service / Enquiry',
+  context = 'website',
+} = Astro.props;
+---
+
+<div class="card-chrome p-6 sm:p-8">
+  <h2 class="text-xl font-bold tracking-tight text-[var(--foreground)] mb-0.5">{title}</h2>
+  <p class="text-sm text-[var(--muted-foreground)] mb-6">We'll get back to you within a few hours.</p>
+
+  <!-- Success state -->
+  <div id="form-success" class="hidden flex-col items-center text-center gap-4 py-8">
+    <div class="w-14 h-14 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center" aria-hidden="true">
+      <svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div>
+      <p class="font-bold text-[var(--foreground)] text-base">Enquiry Received!</p>
+      <p class="text-sm text-[var(--muted-foreground)] mt-1">We'll contact you shortly on your preferred channel.</p>
+    </div>
+    <a
+      id="form-wa-btn"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hidden btn-pill bg-foreground text-background border border-border hover:opacity-90 w-full sm:w-auto justify-center gap-2"
+    >
+      <svg class="w-4 h-4 text-[#25d366] shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.025.507 3.934 1.395 5.61L0 24l6.545-1.371A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.794 9.794 0 01-5.003-1.373l-.36-.213-3.882.814.822-3.787-.234-.389A9.786 9.786 0 012.182 12c0-5.414 4.404-9.818 9.818-9.818 5.414 0 9.818 4.404 9.818 9.818 0 5.414-4.404 9.818-9.818 9.818z"/>
+      </svg>
+      Continue on WhatsApp
+    </a>
+  </div>
+
+  <!-- Error banner -->
+  <div id="form-error" class="hidden items-center gap-3 rounded-lg px-4 py-3 mb-5" style="background:color-mix(in srgb, var(--destructive) 10%, transparent); border: 1px solid color-mix(in srgb, var(--destructive) 25%, transparent);">
+    <span class="text-sm" style="color: var(--destructive);" id="form-error-msg">Something went wrong. Please try WhatsApp or call us directly.</span>
+  </div>
+
+  <!-- Form -->
+  <form id="repair-form" novalidate class="space-y-4">
+    <div>
+      <label for="rf-name" class="block text-xs font-semibold tracking-wide uppercase text-[var(--muted-foreground)] mb-1.5">
+        Your Name <span class="text-primary" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="text" id="rf-name" name="name" required autocomplete="name"
+        placeholder="e.g. Priya Sharma"
+        class="w-full h-11 px-3 rounded-lg border border-[var(--input)] bg-[var(--background)] text-[var(--foreground)] text-sm placeholder:text-[var(--muted-foreground)]/50 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand/50 transition"
+      />
+      <p class="text-xs mt-1 hidden" style="color: var(--destructive);" id="rf-name-err">Please enter your name.</p>
+    </div>
+
+    <div>
+      <label for="rf-phone" class="block text-xs font-semibold tracking-wide uppercase text-[var(--muted-foreground)] mb-1.5">
+        Phone Number <span class="text-primary" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="tel" id="rf-phone" name="phone" required autocomplete="tel"
+        placeholder="e.g. 98765 43210"
+        class="w-full h-11 px-3 rounded-lg border border-[var(--input)] bg-[var(--background)] text-[var(--foreground)] text-sm placeholder:text-[var(--muted-foreground)]/50 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand/50 transition"
+      />
+      <p class="text-xs mt-1 hidden" style="color: var(--destructive);" id="rf-phone-err">Please enter a valid phone number.</p>
+    </div>
+
+    <div>
+      <label for="rf-device" class="block text-xs font-semibold tracking-wide uppercase text-[var(--muted-foreground)] mb-1.5">
+        Product / Model <span class="text-primary" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="text" id="rf-device" name="device" required
+        placeholder="e.g. iPhone 13, Daikin 1.5 Ton AC, Kent RO Purifier"
+        class="w-full h-11 px-3 rounded-lg border border-[var(--input)] bg-[var(--background)] text-[var(--foreground)] text-sm placeholder:text-[var(--muted-foreground)]/50 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand/50 transition"
+      />
+      <p class="text-xs mt-1 hidden" style="color: var(--destructive);" id="rf-device-err">Please specify the product or device model.</p>
+    </div>
+
+    <div>
+      <label for="rf-problem" class="block text-xs font-semibold tracking-wide uppercase text-[var(--muted-foreground)] mb-1.5">
+        Describe the Request or Issue <span class="text-primary" aria-hidden="true">*</span>
+      </label>
+      <textarea
+        id="rf-problem" name="problem" required rows="4"
+        placeholder="e.g. Need filter membrane replacement, split AC installation quote, or smartphone screen replacement."
+        class="w-full px-3 py-2.5 rounded-lg border border-[var(--input)] bg-[var(--background)] text-[var(--foreground)] text-sm placeholder:text-[var(--muted-foreground)]/50 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand/50 transition resize-none"
+      ></textarea>
+      <p class="text-xs mt-1 hidden" style="color: var(--destructive);" id="rf-problem-err">Please describe what you need help with.</p>
+    </div>
+
+    <fieldset>
+      <legend class="block text-xs font-semibold tracking-wide uppercase text-[var(--muted-foreground)] mb-2">
+        Preferred Contact <span class="text-primary" aria-hidden="true">*</span>
+      </legend>
+      <div class="flex gap-5">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="contact_pref" value="Call" checked class="accent-brand w-4 h-4" />
+          <span class="text-sm text-[var(--foreground)]">Call</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="contact_pref" value="WhatsApp" class="accent-brand w-4 h-4" />
+          <span class="text-sm text-[var(--foreground)]">WhatsApp</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <button
+      type="submit" id="rf-submit"
+      class="btn-pill w-full bg-foreground text-background dark:bg-white dark:text-ink hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed transition font-black uppercase tracking-widest text-xs h-12 shadow-lg shadow-brand/10"
+    >
+      <span id="rf-btn-label">Send Enquiry</span>
+    </button>
+
+    <p class="text-xs text-[var(--muted-foreground)]/60 text-center">
+      Your details are only used to respond to your enquiry.
+    </p>
+  </form>
+</div>
+
+<script>
+import { supabase } from '../db/supabase.js';
+
+const form      = document.getElementById('repair-form') as HTMLFormElement;
+const submitBtn = document.getElementById('rf-submit') as HTMLButtonElement;
+const btnLabel  = document.getElementById('rf-btn-label') as HTMLSpanElement;
+const successEl = document.getElementById('form-success') as HTMLDivElement;
+const errorEl   = document.getElementById('form-error') as HTMLDivElement;
+const errorMsg  = document.getElementById('form-error-msg') as HTMLSpanElement;
+const waBtn     = document.getElementById('form-wa-btn') as HTMLAnchorElement;
+
+const fields = {
+  name:    document.getElementById('rf-name')    as HTMLInputElement,
+  phone:   document.getElementById('rf-phone')   as HTMLInputElement,
+  device:  document.getElementById('rf-device')  as HTMLInputElement,
+  problem: document.getElementById('rf-problem') as HTMLTextAreaElement,
+};
+
+const errors = {
+  name:    document.getElementById('rf-name-err')    as HTMLParagraphElement,
+  phone:   document.getElementById('rf-phone-err')   as HTMLParagraphElement,
+  device:  document.getElementById('rf-device-err')  as HTMLParagraphElement,
+  problem: document.getElementById('rf-problem-err') as HTMLParagraphElement,
+};
+
+function validateField(key: keyof typeof fields): boolean {
+  const val = fields[key].value.trim();
+  const invalid = !val;
+  errors[key].classList.toggle('hidden', !invalid);
+  fields[key].classList.toggle('border-red-400', invalid);
+  return !invalid;
+}
+
+Object.keys(fields).forEach((key) => {
+  fields[key as keyof typeof fields].addEventListener('blur', () =>
+    validateField(key as keyof typeof fields)
+  );
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const valid = (Object.keys(fields) as (keyof typeof fields)[])
+    .map(validateField)
+    .every(Boolean);
+  if (!valid) return;
+
+  submitBtn.disabled = true;
+  btnLabel.textContent = 'Sending…';
+  errorEl.classList.add('hidden');
+
+  const preferred_contact =
+    (form.querySelector('input[name="contact_pref"]:checked') as HTMLInputElement)?.value ?? 'Call';
+
+  const payload = {
+    name:              fields.name.value.trim(),
+    phone:             fields.phone.value.trim(),
+    device:            fields.device.value.trim(),
+    problem:           fields.problem.value.trim(),
+    preferred_contact,
+  };
+
+  try {
+    if (!supabase) throw new Error('Supabase client not initialized');
+    
+    const { error } = await supabase.from('enquiries').insert(payload);
+    if (error) throw error;
+
+    const waText = [
+      'Hi! I just submitted an enquiry on your website.',
+      '',
+      `Name: ${payload.name}`,
+      `Phone: ${payload.phone}`,
+      `Product: ${payload.device}`,
+      `Details: ${payload.problem}`,
+      `Preferred contact: ${payload.preferred_contact}`,
+    ].join('\n');
+
+    waBtn.href = `https://wa.me/917262080880?text=${encodeURIComponent(waText)}`;
+    waBtn.classList.remove('hidden');
+
+    form.classList.add('hidden');
+    successEl.classList.remove('hidden');
+    successEl.classList.add('flex');
+
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : 'Unknown error';
+    errorMsg.textContent = `Something went wrong (${detail}). Please WhatsApp or call us directly.`;
+    errorEl.classList.remove('hidden');
+    errorEl.classList.add('flex');
+    submitBtn.disabled = false;
+    btnLabel.textContent = 'Send Enquiry';
+    console.error('[RepairForm] Supabase error:', err);
+  }
+});
+</script>

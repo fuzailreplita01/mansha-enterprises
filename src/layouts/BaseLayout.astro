@@ -1,0 +1,190 @@
+---
+/**
+ * BaseLayout — wraps every page.
+ *
+ * Props:
+ *   title        — <title> prefix (appended with " | Mansha Enterprises"). Keep under ~40 chars
+ *                  so the full tag stays under 60 chars even with the suffix.
+ *   description  — meta description (target 120–150 chars; include keyword + CTA + phone hint)
+ *   canonical    — override canonical URL (defaults to current page URL)
+ *   ogImage      — absolute or root-relative OG image path (default /og-image.png)
+ *   noIndex      — set true on legal, error, and other pages to skip from index
+ */
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBottomBar from '../components/MobileBottomBar.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  noIndex?: boolean;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  showMobileNav?: boolean;
+}
+
+const {
+  title,
+  description = 'Premium mobile phones, ACs, and water purifiers at Mansha Enterprises in Alamgirnagar, Ahmednagar. Sales & service. Call +917262080880 or walk in today.',
+  canonical,
+  ogImage = '/og-image.png',
+  noIndex = false,
+  showHeader = true,
+  showFooter = true,
+  showMobileNav = true,
+} = Astro.props;
+
+const siteOrigin = Astro.site?.origin ?? 'https://mansha-enterprises.com';
+const pageUrl    = canonical ?? Astro.url.href;
+const ogImageAbs = ogImage.startsWith('http') ? ogImage : `${siteOrigin}${ogImage}`;
+const fullTitle  = `${title} | Mansha Enterprises`;
+
+/* ─── LocalBusiness structured data ─────────────────────────────────────────── */
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${siteOrigin}/#localbusiness`,
+  name: 'Mansha Enterprises',
+  image: [`${siteOrigin}/og-image.png`],
+  description:
+    'Premium mobile phones of all kinds, air conditioners (AC), and water purifiers in Ahmednagar. Quality products, genuine accessories, and dependable sales & service.',
+  url: siteOrigin,
+  telephone: '+917262080880',
+  email: 'mansha.enterprises.anagar@gmail.com',
+  priceRange: '₹₹',
+  currenciesAccepted: 'INR',
+  paymentAccepted: 'Cash, UPI, Credit Card, Debit Card',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Alamgirnagar',
+    addressLocality: 'Ahmednagar',
+    addressRegion: 'Maharashtra',
+    postalCode: '414001',
+    addressCountry: 'IN',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 19.1064,
+    longitude: 74.7447,
+  },
+  hasMap: 'https://maps.app.goo.gl/gA9KWfFy7YfJPKBE7',
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '09:00',
+      closes: '20:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Sunday'],
+      opens: '10:00',
+      closes: '18:00',
+    },
+  ],
+  areaServed: [
+    { '@type': 'City', name: 'Ahmednagar' },
+    { '@type': 'Place', name: 'Alamgirnagar' },
+  ],
+  sameAs: [
+    'https://wa.me/917262080880',
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- ── Primary SEO ── -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    {noIndex
+      ? <meta name="robots" content="noindex, nofollow" />
+      : <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    }
+
+    <!-- ── Geo meta — helps local search engines ── -->
+    <meta name="geo.region"    content="IN-MH" />
+    <meta name="geo.placename" content="Ahmednagar" />
+    <meta name="geo.position"  content="19.1064;74.7447" />
+    <meta name="ICBM"          content="19.1064, 74.7447" />
+
+    <!-- ── Open Graph ── -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:title"       content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url"         content={pageUrl} />
+    <meta property="og:image"       content={ogImageAbs} />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name"   content="Mansha Enterprises" />
+    <meta property="og:locale"      content="en_IN" />
+
+    <!-- ── Twitter Card ── -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={ogImageAbs} />
+
+    <!-- ── Favicons ── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <!-- ── Dark mode: apply class before first paint to prevent FOUC ── -->
+    <script is:inline>
+      (function() {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch(e) {}
+      })();
+    </script>
+
+    <!-- ── Fonts: Space Grotesk & IBM Plex Sans variable fonts ── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,300..700;1,300..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ── Schema.org — LocalBusiness (appears on every page) ── -->
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+
+    <!-- ── Named slot for page-specific <head> additions (e.g. Service schema) ── -->
+    <slot name="head" />
+  </head>
+
+  <body class="bg-background text-foreground font-sans antialiased">
+    <!-- Skip-to-content for keyboard / screen-reader users -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-md focus:bg-brand focus:text-white focus:font-medium focus:text-sm"
+    >
+      Skip to content
+    </a>
+
+    {showHeader && <Header />}
+
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+
+    {showFooter && <Footer />}
+
+    <!-- Sticky bottom bar — visible only on mobile (lg:hidden inside component) -->
+    {showMobileNav && <MobileBottomBar />}
+  </body>
+</html>

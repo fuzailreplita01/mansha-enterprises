@@ -1,0 +1,263 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const navItems = [
+  { 
+    label: 'Dashboard', 
+    href: '/admin', 
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>` 
+  },
+  { 
+    label: 'Enquiries', 
+    href: '/admin/enquiries', 
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>` 
+  },
+  { 
+    label: 'Phone Inventory', 
+    href: '/admin/phones', 
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>` 
+  }
+];
+
+const accountItems = [
+  { 
+    label: 'Profile', 
+    href: '/admin/profile', 
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>` 
+  }
+];
+---
+
+<BaseLayout 
+  title={`${title} | Admin Panel`} 
+  description={description}
+  showHeader={false}
+  showFooter={false}
+  showMobileNav={false}
+  noIndex={true}
+>
+  <div class="flex min-h-screen bg-background text-foreground transition-colors duration-300 overflow-x-hidden">
+    
+    <!-- Mobile Header -->
+    <header class="md:hidden fixed top-0 left-0 right-0 h-16 bg-sidebar/80 backdrop-blur-xl border-b border-border z-40 px-6 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <!-- Monogram mark -->
+        <svg viewBox="0 0 200 200" class="w-8 h-8 shrink-0 filter drop-shadow-[0_2px_8px_rgba(250,255,105,0.15)]">
+          <polyline points="44,152 44,56 100,122 156,56 156,152" fill="none" stroke="var(--primary)" stroke-width="22" stroke-linecap="square" stroke-linejoin="miter"/>
+        </svg>
+        <!-- Text -->
+        <div class="flex flex-col -space-y-1 select-none">
+          <span class="font-display font-black text-sm tracking-tight text-foreground uppercase">
+            Mansha <span class="text-primary">Enterprises</span>
+          </span>
+          <span class="font-display font-bold text-[7px] tracking-[0.2em] uppercase text-muted-foreground whitespace-nowrap leading-none pt-1">
+            Admin Panel
+          </span>
+        </div>
+      </div>
+      <button id="mobile-menu-toggle" class="p-2 -mr-2 text-muted-foreground hover:text-brand transition-colors" aria-label="Toggle Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </header>
+
+    <!-- Mobile Sidebar Drawer Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
+    <!-- Sidebar (Shared for Desktop & Mobile Drawer) -->
+    <aside id="admin-sidebar" class="fixed top-0 left-0 w-[260px] md:w-64 bg-sidebar border-r border-border transition-transform duration-300 -translate-x-full md:translate-x-0 z-50 flex flex-col h-[100dvh] overflow-hidden shadow-2xl md:shadow-none">
+      
+      <!-- Sidebar Header -->
+      <div class="p-4 md:p-6 border-b border-border flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5 md:gap-3">
+          <!-- Monogram mark -->
+          <svg viewBox="0 0 200 200" class="w-8 h-8 md:w-9 md:h-9 shrink-0 filter drop-shadow-[0_2px_8px_rgba(250,255,105,0.15)]">
+            <polyline points="44,152 44,56 100,122 156,56 156,152" fill="none" stroke="var(--primary)" stroke-width="22" stroke-linecap="square" stroke-linejoin="miter"/>
+          </svg>
+          <!-- Text -->
+          <div class="flex flex-col -space-y-1 select-none">
+            <span class="font-display font-black text-xs md:text-sm tracking-tight text-foreground uppercase">
+              Mansha <span class="text-primary">Enterprises</span>
+            </span>
+            <span class="font-display font-bold text-[7px] tracking-[0.2em] uppercase text-muted-foreground whitespace-nowrap leading-none pt-1">
+              Control Panel
+            </span>
+          </div>
+        </div>
+        <button id="close-mobile-menu" class="md:hidden p-2 -mr-2 text-muted-foreground hover:text-brand transition-colors cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-grow p-4 md:p-6 space-y-5 md:space-y-8 overflow-y-auto custom-scrollbar">
+        <div>
+          <p class="text-[9px] font-black uppercase tracking-[0.3em] text-brand/60 px-3 md:px-4 mb-2 md:mb-4">Management Hub</p>
+          <div class="space-y-1.5 md:space-y-2">
+            {navItems.map(item => (
+              <a href={item.href} class="nav-link group flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-xs font-black text-muted-foreground hover:text-brand hover:bg-brand/5 border border-transparent hover:border-brand/10 transition-all uppercase tracking-widest">
+                <div class="nav-icon p-1.5 md:p-2 rounded-lg md:rounded-xl bg-muted text-muted-foreground group-hover:text-brand group-hover:bg-brand/10 transition-colors" set:html={item.icon} />
+                <span class="flex-grow">{item.label}</span>
+                <svg class="nav-chevron w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p class="text-[9px] font-black uppercase tracking-[0.3em] text-brand/60 px-3 md:px-4 mb-2 md:mb-4">Personal</p>
+          <div class="space-y-1.5 md:space-y-2">
+            {accountItems.map(item => (
+              <a href={item.href} class="nav-link group flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-xs font-black text-muted-foreground hover:text-brand hover:bg-brand/5 border border-transparent hover:border-brand/10 transition-all uppercase tracking-widest">
+                <div class="nav-icon p-1.5 md:p-2 rounded-lg md:rounded-xl bg-muted text-muted-foreground group-hover:text-brand group-hover:bg-brand/10 transition-colors" set:html={item.icon} />
+                <span class="flex-grow">{item.label}</span>
+                <svg class="nav-chevron w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
+            ))}
+            <button id="admin-logout-btn" class="w-full group flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-xs font-black text-destructive/70 hover:text-destructive hover:bg-destructive/5 border border-transparent hover:border-destructive/10 transition-all uppercase tracking-widest cursor-pointer">
+              <div class="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-muted text-destructive/50 group-hover:text-destructive group-hover:bg-destructive/10 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+              </div>
+              <span class="flex-grow text-left">Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="p-4 md:p-6 border-t border-border bg-muted/10 space-y-4 md:space-y-5 mt-auto shrink-0 pb-safe">
+        <div class="flex items-center justify-between">
+          <ThemeToggle />
+          <a href="/" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent text-[9px] font-black uppercase tracking-[0.1em] text-muted-foreground hover:text-brand border border-border hover:border-brand/20 transition-all">
+            Live Site
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="md:pl-64 flex-grow flex flex-col min-h-screen w-full pt-16 md:pt-0">
+      <section class="flex-grow p-5 md:p-10 lg:p-14 relative overflow-hidden bg-background max-w-[100vw]">
+        <!-- High-fidelity background accents -->
+        <div class="absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-brand/5 blur-[120px] rounded-full -z-10 opacity-60"></div>
+        <div class="absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-brand/5 blur-[120px] rounded-full -z-10 opacity-40"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+          <slot />
+        </div>
+      </section>
+    </main>
+  </div>
+</BaseLayout>
+
+<script>
+  import { supabase } from '../db/supabase';
+
+  // --- Auth logic ---
+  async function checkAuth() {
+    if (!supabase) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.href = '/admin/login';
+      return;
+    }
+  }
+
+  async function handleLogout() {
+    if (!supabase) return;
+    await supabase.auth.signOut();
+    window.location.href = '/admin/login';
+  }
+
+  checkAuth();
+  document.getElementById('admin-logout-btn')?.addEventListener('click', handleLogout);
+
+  // --- Sidebar logic ---
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  const closeMobile = document.getElementById('close-mobile-menu');
+  const sidebar = document.getElementById('admin-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+
+  function openMenu() {
+    sidebar?.classList.remove('-translate-x-full');
+    overlay?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    sidebar?.classList.add('-translate-x-full');
+    overlay?.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  mobileToggle?.addEventListener('click', openMenu);
+  closeMobile?.addEventListener('click', closeMenu);
+  overlay?.addEventListener('click', closeMenu);
+
+  // --- Active state highlighting ---
+  function highlightLinks() {
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll('.nav-link');
+    
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      const isDashboard = href === '/admin';
+      const isActive = isDashboard ? currentPath === href : currentPath.startsWith(href!);
+      
+      if (isActive) {
+        link.classList.remove('text-muted-foreground', 'border-transparent');
+        link.classList.add('text-brand', 'bg-brand/5', 'border-brand/10', 'shadow-sm');
+        
+        const iconDiv = link.querySelector('.nav-icon');
+        if (iconDiv) {
+          iconDiv.classList.remove('bg-muted', 'text-muted-foreground');
+          iconDiv.classList.add('bg-brand/10', 'text-brand');
+        }
+        
+        const chevron = link.querySelector('.nav-chevron');
+        if (chevron) {
+          chevron.classList.remove('opacity-0', '-translate-x-2');
+          chevron.classList.add('opacity-100', 'translate-x-0');
+        }
+      }
+    });
+  }
+
+  highlightLinks();
+</script>
+
+<style>
+  /* Custom scrollbar for sidebar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(212, 160, 23, 0.1);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 160, 23, 0.2);
+  }
+
+  /* Navigation link hover refinement */
+  .nav-link:hover {
+    transform: translateX(4px);
+  }
+
+  @media (min-width: 768px) {
+    .nav-link:hover {
+      transform: translateX(6px);
+    }
+  }
+</style>
