@@ -1,0 +1,279 @@
+---
+/**
+ * Buy Products page.
+ * Listings are fetched from the `products` Supabase table at build time (SSG).
+ * Redeploy to refresh stock. Filters to rows where sold = false.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ProductCard from '../components/ProductCard.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { supabase } from '../db/supabase.js';
+
+interface DbProduct {
+  id: string;
+  created_at: string;
+  name: string;
+  brand: string;
+  category: string;
+  price: number;
+  condition: string;
+  description: string | null;
+  sold: boolean;
+  storage: string | null;
+  color: string | null;
+  spec_capacity: string | null;
+  spec_type: string | null;
+}
+
+let products: DbProduct[] = [];
+
+try {
+  if (!supabase) throw new Error('PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY not set in build environment');
+
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('sold', false)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  products = (data as DbProduct[]) || [];
+} catch (err) {
+  console.error('[buy-products] Supabase fetch failed:', err);
+}
+
+// Group categories for count badges
+const counts = {
+  all: products.length,
+  mobiles: products.filter(p => p.category === 'Mobiles').length,
+  ac: products.filter(p => p.category === 'Air Conditioners').length,
+  purifiers: products.filter(p => p.category === 'Water Purifiers').length,
+  accessories: products.filter(p => p.category === 'Accessories').length,
+};
+---
+
+<BaseLayout
+  title="Appliance & Mobile Sales Ahmednagar — Buy Pre-owned & New"
+  description="Explore mobiles, ACs, water purifiers, and genuine accessories in Alamgirnagar, Ahmednagar. Quality verified new & pre-owned stock at Mansha Enterprises. Call +917262080880."
+>
+
+  <!-- ── Page header ── -->
+  <PageHero
+    eyebrow="Shop Products"
+    title="Premium Products in Ahmednagar."
+    subtitle="Verified new and pre-owned products. Mobiles, air conditioners, water purifiers, and accessories — checked and graded by our technicians with fair pricing."
+  >
+    <!-- Condition legend -->
+    <div class="mt-6 flex flex-wrap gap-2.5 text-[10px] font-bold uppercase tracking-wider">
+      {[
+        { label: 'New',       cls: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+        { label: 'Like New',  cls: 'bg-teal-500/10 text-teal-400 border-teal-500/20' },
+        { label: 'Excellent', cls: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+        { label: 'Good',      cls: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+        { label: 'Fair',      cls: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
+      ].map(({ label, cls }) => (
+        <span class:list={['inline-flex items-center gap-1 px-2 py-0.5 rounded-full border', cls]}>
+          {label}
+        </span>
+      ))}
+      <span class="text-primary/70 self-center capitalize tracking-normal text-xs font-medium italic">— Quality grading by our service experts</span>
+    </div>
+  </PageHero>
+
+  <!-- ── Product listings grid ── -->
+  <section class="bg-[var(--muted)] py-12 sm:py-16" aria-labelledby="products-grid-heading">
+    <div class="container-page">
+      <h2 id="products-grid-heading" class="sr-only">Available products</h2>
+
+      {products.length > 0 ? (
+        <div class="space-y-8">
+          <!-- Category Filtering Tabs -->
+          <div class="flex flex-wrap justify-center items-center gap-2 max-w-2xl mx-auto border-b border-[var(--border)]/40 pb-6">
+            {[
+              { id: 'all', label: 'All Products', count: counts.all },
+              { id: 'Mobiles', label: 'Mobiles', count: counts.mobiles },
+              { id: 'Air Conditioners', label: 'Air Conditioners', count: counts.ac },
+              { id: 'Water Purifiers', label: 'Water Purifiers', count: counts.purifiers },
+              { id: 'Accessories', label: 'Accessories', count: counts.accessories },
+            ].map(tab => (
+              <button 
+                data-filter={tab.id}
+                class:list={[
+                  'filter-btn h-10 px-4 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all cursor-pointer flex items-center gap-2 select-none',
+                  tab.id === 'all' 
+                    ? 'bg-brand border-brand text-[#0A0A0A] hover:bg-[#E8ED4F]' 
+                    : 'bg-card border-[var(--border)] text-[var(--muted-foreground)] hover:text-brand hover:border-brand/20'
+                ]}
+              >
+                {tab.label}
+                <span class:list={[
+                  'inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[9px] font-black',
+                  tab.id === 'all' 
+                    ? 'bg-[#0A0A0A]/10 text-[#0A0A0A]' 
+                    : 'bg-muted text-[var(--muted-foreground)]'
+                ]}>
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <!-- Product Grid -->
+          <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {products.map(p => {
+              // Custom WhatsApp message formatted per category
+              let waMessage = `Hi, I am interested in buying the ${p.brand} ${p.name}`;
+              if (p.category === 'Mobiles' && p.storage) waMessage += ` (${p.storage})`;
+              else if ((p.category === 'Air Conditioners' || p.category === 'Water Purifiers') && p.spec_capacity) waMessage += ` (${p.spec_capacity})`;
+              
+              waMessage += ` listed for ₹${p.price.toLocaleString('en-IN')}. Is it still available?`;
+
+              return (
+                <ProductCard
+                  id={p.id}
+                  name={p.name}
+                  brand={p.brand}
+                  category={p.category}
+                  price={p.price}
+                  condition={p.condition}
+                  description={p.description || undefined}
+                  storage={p.storage || undefined}
+                  color={p.color || undefined}
+                  specCapacity={p.spec_capacity || undefined}
+                  specType={p.spec_type || undefined}
+                  whatsappMsg={waMessage}
+                />
+              );
+            })}
+          </div>
+
+          <!-- Interactive Empty State (Shown when filters hide all products) -->
+          <div id="filter-empty-state" class="hidden card-chrome p-6 sm:p-12 text-center max-w-md mx-auto">
+            <div class="w-12 h-12 rounded-2xl bg-brand/10 flex items-center justify-center text-primary border border-brand/20 shadow-[0_0_15px_rgba(250,255,105,0.15)] mx-auto mb-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
+            <h3 class="font-display font-semibold text-[var(--foreground)] text-lg">No matching products available</h3>
+            <p class="text-sm text-[var(--muted-foreground)] mt-2 mb-6 leading-relaxed">We don't have any items in this category currently listed. Contact us to ask about upcoming stock!</p>
+            <WhatsAppButton 
+              message="Hi, I am looking for products at Mansha Enterprises. Do you have any stock details for my request?" 
+              label="Ask About Stock" 
+              size="md" 
+              variant="outline" 
+              class="w-full sm:w-auto h-12 sm:h-11"
+            />
+          </div>
+        </div>
+      ) : (
+        /* Overall Empty state */
+        <div class="card-chrome p-6 sm:p-12 text-center max-w-md mx-auto">
+          <div class="w-12 h-12 rounded-2xl bg-brand/10 flex items-center justify-center text-primary border border-brand/20 shadow-[0_0_15px_rgba(250,255,105,0.15)] mx-auto mb-5" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <h3 class="font-display font-semibold text-[var(--foreground)] text-lg">No products listed right now</h3>
+          <p class="text-sm text-[var(--muted-foreground)] mt-2 mb-6 leading-relaxed">New sales stock (new & pre-owned) arrives regularly. WhatsApp us with your requirements.</p>
+          <WhatsAppButton 
+            message="Hi, I'm looking for a product. Can you help?" 
+            label="Ask About Stock" 
+            size="md" 
+            variant="outline" 
+            class="w-full sm:w-auto h-12 sm:h-11"
+          />
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ── Can't find what you need ── -->
+  <section class="py-16 sm:py-24 bg-[var(--background)] border-t border-[var(--border)] relative overflow-hidden" aria-labelledby="products-cta-heading">
+    <!-- Ambient brand glow -->
+    <div class="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden="true">
+      <div class="w-[800px] h-[400px] rounded-full opacity-10" style="background: radial-gradient(ellipse at center, rgba(250,255,105,0.5) 0%, transparent 65%);"></div>
+    </div>
+    
+    <div class="container-page text-center relative z-10">
+      <h2 id="products-cta-heading" class="font-display heading-tight text-2xl sm:text-4xl text-[var(--foreground)]">
+        Looking for a specific model?
+      </h2>
+      <p class="mt-3 text-sm text-[var(--muted-foreground)] max-w-sm mx-auto">
+        Tell us your preferred brand, specifications, and budget — we'll let you know when the right product arrives.
+      </p>
+      
+      <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-md mx-auto sm:max-w-none">
+        <WhatsAppButton
+          message="Hi, I'm looking for a specific product. My requirements are: "
+          label="Tell Us What You Need"
+          size="md"
+          variant="outline"
+          class="w-full sm:w-auto h-12 sm:h-11"
+        />
+        <a
+          href="tel:+917262080880"
+          class="inline-flex items-center justify-center h-11 px-6 rounded-lg bg-brand hover:bg-[#E8ED4F] text-[#0A0A0A] text-sm font-display font-semibold transition-all shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand focus-visible:ring-offset-[#0A0A0A] w-full sm:w-auto"
+        >
+          Call Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  // Client-side filtering script
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.product-card') as NodeListOf<HTMLElement>;
+  const emptyState = document.getElementById('filter-empty-state');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const currentTarget = e.currentTarget as HTMLButtonElement;
+      const filter = currentTarget.dataset.filter;
+
+      // Update button styling
+      filterBtns.forEach(b => {
+        const item = b as HTMLButtonElement;
+        const isSelected = item.dataset.filter === filter;
+        
+        if (isSelected) {
+          item.classList.remove('bg-card', 'border-[var(--border)]', 'text-[var(--muted-foreground)]', 'hover:text-brand', 'hover:border-brand/20');
+          item.classList.add('bg-brand', 'border-brand', 'text-[#0A0A0A]', 'hover:bg-[#E8ED4F]');
+          
+          const badge = item.querySelector('span');
+          if (badge) {
+            badge.classList.remove('bg-muted', 'text-[var(--muted-foreground)]');
+            badge.classList.add('bg-[#0A0A0A]/10', 'text-[#0A0A0A]');
+          }
+        } else {
+          item.classList.remove('bg-brand', 'border-brand', 'text-[#0A0A0A]', 'hover:bg-[#E8ED4F]');
+          item.classList.add('bg-card', 'border-[var(--border)]', 'text-[var(--muted-foreground)]', 'hover:text-brand', 'hover:border-brand/20');
+          
+          const badge = item.querySelector('span');
+          if (badge) {
+            badge.classList.remove('bg-[#0A0A0A]/10', 'text-[#0A0A0A]');
+            badge.classList.add('bg-muted', 'text-[var(--muted-foreground)]');
+          }
+        }
+      });
+
+      // Filter products
+      let visibleCount = 0;
+      cards.forEach(card => {
+        const category = card.dataset.category;
+        if (filter === 'all' || category === filter) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Handle category empty state
+      if (visibleCount === 0) {
+        emptyState?.classList.remove('hidden');
+      } else {
+        emptyState?.classList.add('hidden');
+      }
+    });
+  });
+</script>

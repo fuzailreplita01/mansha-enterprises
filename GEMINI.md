@@ -19,24 +19,24 @@ This file serves as the primary instruction set for Gemini CLI in this workspace
 
 ---
 
-## Latest Project State (June 19, 2026 — updated)
+## Latest Project State (June 20, 2026 — updated)
 
 ### 0. Mobile Layout Typography & Spacing Optimization
-- **Page & Hero Headings**: Standardized main page headers, hero text, and subtitle spacing across public and admin pages (e.g., `PageHero.astro`, `SplineHero.tsx`, `index.astro`, `about.astro`, `services.astro`, `accessories.astro`, `buy-phones.astro`, and `admin/index.astro`). Text values transition smoothly from `text-3xl`/`text-4xl` to `text-2xl`/`text-3xl` on viewports under 768px.
+- **Page & Hero Headings**: Standardized main page headers, hero text, and subtitle spacing across public and admin pages (e.g., `PageHero.astro`, `SplineHero.astro`, `index.astro`, `about.astro`, `services.astro`, `accessories.astro`, `buy-products.astro`, and `admin/index.astro`). Text values transition smoothly from `text-3xl`/`text-4xl` to `text-2xl`/`text-3xl` on viewports under 768px.
 - **Branding Guidelines Page Layout**: Scaled down outer wrapper margins, inner grids (e.g. golden-ratio diagram, spec grid), card paddings, and font tokens to fit neatly on mobile screens without horizontal clipping or excessive scrolling.
 - **Sidebar Drawers**: Standardized the public sidebar in `Header.astro` and the admin sidebar in `AdminLayout.astro` on mobile screens with a native mobile app look: reduced width to `260px`, tightened container padding to `p-4`, scaled down link dimensions/fonts, shrunk icons to match, and formatted the main CTAs to `h-11` (meets Material/iOS human-interface touch guidelines). All web/desktop sizes remain completely untouched.
 
 ### 1. Admin Panel & Security
 - **Full Admin Suite**: Implemented at `/admin` with Supabase Authentication.
-- **Dashboard**: Features real-time stats for enquiries and inventory.
-- **CRUD Operations**: Advanced data tables with server-side pagination and search.
-- **Database Migrations**: Initial schema and RLS policies documented in `supabase/migrations/` and `docs/DATABASE_SCHEMA.md`.
+- **Dashboard**: Features real-time stats for enquiries and inventory (products).
+- **CRUD Operations**: Advanced data tables with server-side pagination, multi-column search, and category-aware input forms.
+- **Database Migrations**: Created unified schema migration for `enquiries` and `products` tables with full Row-Level Security (RLS) policies at `supabase/migrations/20260620000000_create_products_table.sql`.
 
 ### 2. UI/UX & Navigation
-- **Mobile Drawer Overhaul**: Migrated from a bottom bar to a professional left-to-right slide-out sidebar for both frontend and admin, featuring complete active navigation state highlighting for all pages (services, buy-phones, accessories, about, faq).
+- **Mobile Drawer Overhaul**: Migrated from a bottom bar to a professional left-to-right slide-out sidebar for both frontend and admin, featuring complete active navigation state highlighting for all pages (services, buy-products, accessories, about, faq).
 - **Admin Sidebar Alignment**: Standardized the admin panel sidebar to match the layout and tracking of the frontend sidebar (using uppercase wide tracking, flex chevrons, active state highlights, and unified layout bounds). Configured sidebar position to be fully `fixed` on desktop (offsetting content container via padding-left) to prevent it from scrolling away with page contents.
-- **Form Contrast & Image Overhaul**: Add/Edit Device forms (`phones/add.astro`, `phones/edit.astro`) overhauled using theme tokens, correcting text invisibility bugs in light mode, and completely removing the image upload fields.
-- **Compacted Datatables**: The phone inventory datatable (`phones/index.astro`) has been compacted (removed image previews, decreased vertical cell padding to `py-3.5`, and updated responsive widths).
+- **Form Contrast & Image Overhaul**: Add/Edit Product forms (`products/add.astro`, `products/edit.astro`) overhauled using theme tokens, correcting text invisibility bugs in light mode, and dynamically showing inputs (e.g., storage/color for Mobiles, capacity/type for ACs/Water Purifiers).
+- **Compacted Datatables**: The product inventory datatable (`products/index.astro`) has been compacted and generalized (displaying brands, names, conditions, categories, and compact options).
 - **Details Modal Upgrade**: enquiry-modal fully modernized with backdrop blurs, accent grids, and theme synergy.
 - **Profile Layout Refinements**: Overhauled `profile.astro` with admin details grid and secure inline notification banners.
 - **Brand Consistency**: Unified the peak-M monogram brand mark across all headers and footers.
